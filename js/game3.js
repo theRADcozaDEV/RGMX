@@ -33,7 +33,7 @@ const game3 = {
             </div>
             
             <div class="d-flex flex-wrap justify-content-center align-content-center w-100 h-100" style="padding-top: 50%;">
-                <div class="d-flex flex-wrap justify-content-center" style="gap: 20px; max-width: 600px; width: 100%;">
+                <div class="d-flex flex-wrap justify-content-center" style="gap: 150px; max-width: 800px; width: 100%;">
                     <!-- 6 Grid Items -->
                     ${this.generateGridItems(stageNum)}
                 </div>
@@ -46,7 +46,7 @@ const game3 = {
             // Enforce 3 columns styling - Transparent Hot Zones
             // Using fixed width/height for rigid layout
             item.style.width = '150px'; 
-            item.style.height = '272px'; 
+            item.style.height = '350px'; 
             // item.style.border = '2px solid red'; // Debug: Comment out for production
             item.style.cursor = 'pointer';
             item.style.flex = 'none'; // Disable flex grow/shrink behavior if needed, or just let wrap handle it
