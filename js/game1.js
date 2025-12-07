@@ -84,7 +84,7 @@ const game1 = {
                 slot.style.padding = '0 15px'; // Add spacing
             } else {
                 // Stage 2: Fixed width to match drop zones (150px)
-                slot.style.width = '150px';
+                slot.style.width = '170px';
                 slot.style.flex = 'none';
             }
 
