@@ -95,16 +95,24 @@
         </div>
 
         <!-- Input Screen -->
-        <div id="screen-input" class="screen" style="background-color: #222;">
-            <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
-                <h2 class="text-white mb-4">Enter Your Details</h2>
+        <div id="screen-input" class="screen" style="background-image: url('assets/dark_backgroup.jpg'); background-size: cover; background-position: center;">
+            <div class="container h-100 d-flex flex-column justify-content-end align-items-center pb-5">
+                <!-- Score Circle -->
+                <div id="total-score-container" class="rounded-circle bg-danger text-white d-flex flex-column justify-content-center align-items-center mb-4" style="width: 200px; height: 200px; border: 5px solid white; font-weight: bold; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+                    <span id="total-score-value" style="font-size: 60px; line-height: 1;">0</span>
+                    <span style="font-size: 20px;">POINTS</span>
+                </div>
+
+                <h4 class="text-white mb-0" style="font-size: 45px;">Join our ranks in the</h4>
+                <h1 class="text-danger fw-bold mb-4" style="font-size: 54px; text-shadow: 2px 2px 4px #000;">RGMX LEADERBOARD</h1>
+                
                 <div class="mb-3 w-75">
-                    <label for="input-name" class="form-label text-white">Name</label>
+                    <label for="input-name" class="form-label text-danger w-100 text-center">NAME</label>
                     <input type="text" class="form-control form-control-lg" id="input-name" placeholder="Enter Name"
                         readonly>
                 </div>
                 <div class="mb-4 w-75">
-                    <label for="input-dept" class="form-label text-white">Department</label>
+                    <label for="input-dept" class="form-label text-danger w-100 text-center">DEPARTMENT</label>
                     <input type="text" class="form-control form-control-lg" id="input-dept"
                         placeholder="Enter Department" readonly>
                 </div>
@@ -113,6 +121,52 @@
                 <div id="keyboard-container" class="w-100 mb-4"></div>
 
                 <button class="btn btn-success btn-lg w-50" onclick="app.submitInput()">Submit</button>
+            </div>
+        </div>
+
+        <!-- Leaderboard Screen -->
+        <div id="screen-leaderboard" class="screen" style="background-image: url('assets/dark_backgroup.jpg'); background-size: cover; background-position: center;">
+            <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
+                <h1 class="text-white fw-bold mb-5" style="font-size: 54px; text-shadow: 2px 2px 4px #000;">LEADERBOARD</h1>
+                
+                <div class="w-75">
+                    <!-- Rows -->
+                    <!-- 1st Place (Bigger) -->
+                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-4 mb-3 rounded border border-white" style="font-size: 32px; box-shadow: 0 0 15px rgba(255,0,0,0.5);">
+                        <div style="width: 15%; font-weight: bold; color: white;">1st</div>
+                        <div style="width: 60%; font-weight: bold;">Sarah Connor</div>
+                        <div style="width: 25%; text-align: right; font-weight: bold;">70</div>
+                    </div>
+                    <!-- 2nd Place (Bigger) -->
+                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-4 mb-3 rounded border border-white" style="font-size: 32px; box-shadow: 0 0 15px rgba(255,0,0,0.5);">
+                        <div style="width: 15%; font-weight: bold; color: white;">2nd</div>
+                        <div style="width: 60%; font-weight: bold;">John Matrix</div>
+                        <div style="width: 25%; text-align: right; font-weight: bold;">70</div>
+                    </div>
+                    <!-- 3rd Place (Bigger) -->
+                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-4 mb-3 rounded border border-white" style="font-size: 32px; box-shadow: 0 0 15px rgba(255,0,0,0.5);">
+                        <div style="width: 15%; font-weight: bold; color: white;">3rd</div>
+                        <div style="width: 60%; font-weight: bold;">Dutch Schaefer</div>
+                        <div style="width: 25%; text-align: right; font-weight: bold;">60</div>
+                    </div>
+
+                    <h1 class="text-white text-center fw-bold my-4">RUNNER UP</h1>
+                    
+                    <!-- 4th Place (Normal) -->
+                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-3 mb-2 rounded border border-white" style="font-size: 24px; opacity: 0.9;">
+                        <div style="width: 15%; font-weight: bold; color: white;">4th</div>
+                        <div style="width: 60%;">Alan Schaefer</div>
+                        <div style="width: 25%; text-align: right; font-weight: bold;">50</div>
+                    </div>
+                    <!-- 5th Place (Normal) -->
+                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-3 mb-2 rounded border border-white" style="font-size: 24px; opacity: 0.9;">
+                        <div style="width: 15%; font-weight: bold; color: white;">5th</div>
+                        <div style="width: 60%;">Harry Tasker</div>
+                        <div style="width: 25%; text-align: right; font-weight: bold;">40</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-lg mt-5 w-25" onclick="app.showScreen('screen-1')">HOME</button>
             </div>
         </div>
 

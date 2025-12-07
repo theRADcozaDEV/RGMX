@@ -63,6 +63,15 @@ const app = {
 
             // Reset inputs if showing input screen
             if (screenId === 'screen-input') {
+                // Calculate Score
+                let totalPoints = 0;
+                if (typeof game1 !== 'undefined' && game1.score >= 3) totalPoints += 10;
+                if (typeof game2 !== 'undefined' && game2.score >= 4) totalPoints += 20;
+                if (typeof game3 !== 'undefined' && game3.score >= 6) totalPoints += 40;
+
+                const scoreDisplay = document.getElementById('total-score-value');
+                if (scoreDisplay) scoreDisplay.innerText = totalPoints;
+
                 document.getElementById('input-name').value = '';
                 document.getElementById('input-dept').value = '';
                 // Focus first input
@@ -150,8 +159,8 @@ const app = {
 
         // Here you would save the data
 
-        // Go back to home
-        this.showScreen('screen-1');
+        // Go to Leaderboard
+        this.showScreen('screen-leaderboard');
     },
 
     setLedColor: function (r, g, b) {

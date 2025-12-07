@@ -27,7 +27,6 @@ class VirtualKeyboard {
 
     render() {
         const rows = [
-            ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
             ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
             ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
             ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
@@ -38,15 +37,15 @@ class VirtualKeyboard {
         rows.forEach(row => {
             html += '<div class="d-flex justify-content-center mb-2">';
             row.forEach(key => {
-                html += `<button class="btn btn-secondary m-1 key-btn" data-key="${key}" style="width: 60px; height: 60px; font-size: 1.5rem;">${key}</button>`;
+                html += `<button class="btn btn-danger m-1 key-btn" data-key="${key}" style="width: 60px; height: 60px; font-size: 1.5rem;">${key}</button>`;
             });
             html += '</div>';
         });
 
         // Space and Backspace
         html += '<div class="d-flex justify-content-center mb-2">';
-        html += `<button class="btn btn-secondary m-1 key-btn" data-key="SPACE" style="width: 300px; height: 60px; font-size: 1.5rem;">SPACE</button>`;
-        html += `<button class="btn btn-danger m-1 key-btn" data-key="BACKSPACE" style="width: 100px; height: 60px; font-size: 1.5rem;">⌫</button>`;
+        html += `<button class="btn btn-danger m-1 key-btn" data-key="SPACE" style="width: 300px; height: 60px; font-size: 1.5rem;">SPACE</button>`;
+        html += `<button class="btn btn-dark m-1 key-btn" data-key="BACKSPACE" style="width: 100px; height: 60px; font-size: 1.5rem;">⌫</button>`;
         html += '</div>';
 
         html += '</div>';
