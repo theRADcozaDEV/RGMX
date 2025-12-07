@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGMX Game App</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div id="game-container" class="position-relative overflow-hidden">
+
+        <!-- Screen 1: Home / Attract Mode -->
+        <div id="screen-1" class="screen active" style="background-image: url('assets/screen1.png');">
+            <div class="pulse-btn btn-screen1-start" onclick="app.showScreen('screen-2')"></div>
+        </div>
+
+        <!-- Screen 2: Menu -->
+        <div id="screen-2" class="screen" style="background-image: url('assets/screen2.png');">
+            <!-- Invisible hitboxes for game selection - adjusted based on likely positions -->
+            <div class="position-absolute" style="top: 30%; left: 10%; width: 80%; height: 15%;"
+                onclick="app.startGame(1)"></div>
+            <div class="position-absolute" style="top: 50%; left: 10%; width: 80%; height: 15%;"
+                onclick="app.startGame(2)"></div>
+            <div class="position-absolute" style="top: 70%; left: 10%; width: 80%; height: 15%;"
+                onclick="app.startGame(3)"></div>
+        </div>
+
+        <!-- Game 1 Screens -->
+        <div id="screen-3" class="screen" style="background-image: url('assets/screen3_game1_screen1.png');">
+            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
+                onclick="app.showScreen('screen-4')">Next</button>
+        </div>
+        <div id="screen-4" class="screen" style="background-image: url('assets/screen4_game1_screen2.png');">
+            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
+                onclick="app.showScreen('screen-5')">Play</button>
+        </div>
+        <div id="screen-5" class="screen" style="background-image: url('assets/screen5_game1_gameplay1.png');">
+            <!-- Game 1 Logic Container Stage 1 -->
+            <div id="game1-container" class="w-100 h-100"></div>
+        </div>
+        <div id="screen-6" class="screen" style="background-image: url('assets/screen6_game1_gameplay2.png');">
+            <!-- Game 1 Logic Container Stage 2 -->
+            <div id="game1-stage2-container" class="w-100 h-100"></div>
+        </div>
+
+        <!-- Game 2 Screens -->
+        <div id="screen-9" class="screen" style="background-image: url('assets/screen9_game2_screen1.png');">
+            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
+                onclick="app.showScreen('screen-10')">Next</button>
+        </div>
+        <div id="screen-10" class="screen" style="background-image: url('assets/screen10_game2_screen2.png');">
+            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
+                onclick="app.showScreen('screen-11')">Play</button>
+        </div>
+        <div id="screen-11" class="screen" style="background-image: url('assets/screen11_game2_gameplay1.png');">
+            <!-- Game 2 Logic Container -->
+            <div id="game2-container" class="w-100 h-100"></div>
+        </div>
+
+        <!-- Game 3 Screens -->
+        <div id="screen-12" class="screen" style="background-image: url('assets/screen12_game3_screen1.png');">
+            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
+                onclick="app.showScreen('screen-13')">Next</button>
+        </div>
+        <div id="screen-13" class="screen" style="background-image: url('assets/screen13_game3_screen2.png');">
+            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
+                onclick="app.showScreen('screen-14')">Play</button>
+        </div>
+        <div id="screen-14" class="screen" style="background-image: url('assets/screen14_game3_gameplay1.png');">
+            <!-- Game 3 Logic Container -->
+            <div id="game3-container" class="w-100 h-100"></div>
+        </div>
+        <div id="screen-15" class="screen" style="background-image: url('assets/screen15_game3_gameplay2.png');">
+            <!-- Game 3 Logic Container Stage 2 -->
+            <div id="game3-stage2-container" class="w-100 h-100"></div>
+        </div>
+
+        <!-- Common End Screens -->
+        <div id="screen-7" class="screen" style="background-image: url('assets/screen7_game_win.png');">
+            <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-input')"></button>
+        </div>
+        <div id="screen-8" class="screen" style="background-image: url('assets/screen8_game_timeout.png');">
+            <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-input')"></button>
+        </div>
+
+        <!-- Input Screen -->
+        <div id="screen-input" class="screen" style="background-color: #222;">
+            <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
+                <h2 class="text-white mb-4">Enter Your Details</h2>
+                <div class="mb-3 w-75">
+                    <label for="input-name" class="form-label text-white">Name</label>
+                    <input type="text" class="form-control form-control-lg" id="input-name" placeholder="Enter Name"
+                        readonly>
+                </div>
+                <div class="mb-4 w-75">
+                    <label for="input-dept" class="form-label text-white">Department</label>
+                    <input type="text" class="form-control form-control-lg" id="input-dept"
+                        placeholder="Enter Department" readonly>
+                </div>
+
+                <!-- Keyboard Container -->
+                <div id="keyboard-container" class="w-100 mb-4"></div>
+
+                <button class="btn btn-success btn-lg w-50" onclick="app.submitInput()">Submit</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Game Logic -->
+    <script src="js/timer.js"></script>
+    <script src="js/game1.js"></script>
+    <script src="js/game2.js"></script>
+    <script src="js/game3.js"></script>
+    <!-- App Logic -->
+    <script src="js/keyboard.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,261 @@
+:root {
+    --app-width: 2160px;
+    --app-height: 3840px;
+}
+
+body {
+    background-color: #000;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    /* Placeholder font */
+}
+
+#game-container {
+    width: 100%;
+    height: 100%;
+    max-width: calc(100vh * 9 / 16);
+    /* Maintain 9:16 aspect ratio based on height */
+    aspect-ratio: 9 / 16;
+    background-color: #1a1a1a;
+    position: relative;
+}
+
+/* For actual 4k screens, we might want to scale up or just fill */
+@media (min-width: 2160px) and (min-height: 3840px) {
+    #game-container {
+        max-width: 2160px;
+        max-height: 3840px;
+    }
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: none;
+    /* Hidden by default */
+    z-index: 1;
+}
+
+.screen.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Utility */
+.btn-invisible {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.bottom-10 {
+    bottom: 10%;
+}
+
+/* Debugging helper */
+.debug-border {
+    border: 2px solid red;
+}
+
+/* Countdown Timer */
+.countdown-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.countdown-svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+}
+
+.countdown-circle-bg {
+    fill: none;
+    stroke: #000000;
+    stroke-width: 8;
+}
+
+.countdown-circle-fg {
+    fill: none;
+    stroke: url(#countdown-gradient);
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear;
+}
+
+.countdown-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 4rem;
+    font-weight: bold;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Drag and Drop Styles */
+.drop-zone {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #ffffff;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.drop-zone.drag-over {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: #fda13d;
+}
+
+.drop-zone.correct {
+    border-color: #00ff00;
+    background-color: rgba(0, 255, 0, 0.2);
+}
+
+.draggable-item {
+    width: 120px;
+    height: 120px;
+    background-color: #fe554a;
+    border-radius: 10px;
+    cursor: grab;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 2rem;
+    touch-action: none;
+    /* Important for touch events */
+    position: absolute;
+    z-index: 100;
+}
+
+.draggable-item.dragging {
+    opacity: 0.8;
+    cursor: grabbing;
+    z-index: 1000;
+    transform: scale(1.1);
+}
+
+/* Grid Game Styles (Game 3) */
+.grid-item {
+    width: 250px;
+    height: 250px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.grid-item:active {
+    transform: scale(0.95);
+}
+
+.grid-item.selected {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-color: #ffffff;
+}
+
+.grid-item.correct {
+    background-color: rgba(0, 255, 0, 0.5);
+    border-color: #00ff00;
+}
+
+.grid-item.wrong {
+    background-color: rgba(255, 0, 0, 0.5);
+    border-color: #ff0000;
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    50% {
+        transform: translateX(10px);
+    }
+
+    75% {
+        transform: translateX(-10px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Pulse Animation */
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+        transform: scale(1);
+    }
+
+    70% {
+        box-shadow: 0 0 20px 20px rgba(255, 255, 255, 0);
+        transform: scale(1.02);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+        transform: scale(1);
+    }
+}
+
+.pulse-btn {
+    position: absolute;
+    border-radius: 50px;
+    /* Approximate rounded corners */
+    animation: pulse-glow 2s infinite;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    /* Slight highlight */
+}
+
+/* Specific button on Screen 1 */
+.btn-screen1-start {
+    top: 70.3%;
+    left: 19.9%;
+    width: 58.8%;
+    height: 7.8%;
+}
