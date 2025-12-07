@@ -8,6 +8,7 @@ const game2 = {
     start: function () {
         console.log('Game 2 Started');
         this.score = 0;
+        this.placedCount = 0;
         this.isPlaying = true;
 
         const container = document.getElementById('game2-container');
@@ -16,24 +17,24 @@ const game2 = {
             
             <div class="d-flex w-100 h-100">
                 <!-- Column 1: Draggable Items (33%) -->
-                <div class="d-flex flex-column justify-content-around align-items-center" style="width: 33%; background: rgba(0,0,0,0.2);">
+                <div class="d-flex flex-column justify-content-around align-items-center" style="width: 33%; ">
                     <div id="g2-drag-container" class="d-flex flex-column justify-content-around h-100 w-100 align-items-center position-relative">
                         <!-- Items will be injected here -->
                     </div>
                 </div>
 
                 <!-- Column 2: Drop Zones (66%) -->
-                <div class="d-flex flex-wrap" style="width: 67%;">
-                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="1" style="width: 50%; height: 50%; border: 1px solid rgba(255,255,255,0.1);">
+                <div class="d-flex flex-wrap align-content-start" style="width: 67%; padding-top: 65%; padding-right: 30px;">
+                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="1" style="width: 50%; height: 300px; border: 1px solid rgba(255,255,255,0.1);">
                         <div class="drop-zone" data-id="1">Zone 1</div>
                     </div>
-                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="2" style="width: 50%; height: 50%; border: 1px solid rgba(255,255,255,0.1);">
+                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="2" style="width: 50%; height: 300px; border: 1px solid rgba(255,255,255,0.1);">
                         <div class="drop-zone" data-id="2">Zone 2</div>
                     </div>
-                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="3" style="width: 50%; height: 50%; border: 1px solid rgba(255,255,255,0.1);">
+                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="3" style="width: 50%; height: 300px; border: 1px solid rgba(255,255,255,0.1);">
                         <div class="drop-zone" data-id="3">Zone 3</div>
                     </div>
-                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="4" style="width: 50%; height: 50%; border: 1px solid rgba(255,255,255,0.1);">
+                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="4" style="width: 50%; height: 300px; border: 1px solid rgba(255,255,255,0.1);">
                         <div class="drop-zone" data-id="4">Zone 4</div>
                     </div>
                 </div>
@@ -44,7 +45,7 @@ const game2 = {
 
         // Timer
         if (this.timerInstance) this.timerInstance.stop();
-        this.timerInstance = new CountdownTimer('g2-timer-container', 20, () => this.endGame(false));
+        this.timerInstance = new CountdownTimer('g2-timer-container', 300, () => this.endGame(false));
         this.timerInstance.start();
     },
 
@@ -57,17 +58,26 @@ const game2 = {
         // Let's use absolute within the left column for smoother drag.
 
         const items = [
-            { id: 1, text: 'Item 1', top: '10%' },
-            { id: 2, text: 'Item 2', top: '35%' },
-            { id: 3, text: 'Item 3', top: '60%' },
-            { id: 4, text: 'Item 4', top: '85%' }
+            { id: 1, img: 'assets/piece_game2_1_1.png', top: '35%' },
+            { id: 2, img: 'assets/piece_game2_1_2.png', top: 'calc(35% + 160px)' },
+            { id: 3, img: 'assets/piece_game2_1_3.png', top: 'calc(35% + 320px)' },
+            { id: 4, img: 'assets/piece_game2_1_4.png', top: 'calc(35% + 480px)' }
         ];
 
         items.forEach(item => {
             const el = document.createElement('div');
             el.className = 'draggable-item';
             el.setAttribute('data-id', item.id);
-            el.innerText = item.text;
+            // el.innerText = item.text; // Removed text
+            
+            // Image styling
+            el.style.backgroundImage = `url('${item.img}')`;
+            el.style.backgroundSize = 'contain';
+            el.style.backgroundRepeat = 'no-repeat';
+            el.style.backgroundPosition = 'center';
+            el.style.width = '170px'; // Adjusted width
+            el.style.height = '150px';
+
             el.style.position = 'absolute';
             el.style.top = item.top;
             // Center horizontally in the 33% column
@@ -142,15 +152,12 @@ const game2 = {
         if (!this.draggedItem) return;
         el.classList.remove('dragging');
 
+        console.log('Drag End. Current Drop Zone:', this.currentDropZone);
+
         if (this.currentDropZone) {
             this.snapToZone(el, this.currentDropZone);
         } else {
-            // Reset to initial position?
-            // For now, let's just re-center it in the column if missed?
-            // Or leave it.
-            // Let's re-apply the centering transform if it's not dropped.
-            // Actually, finding the original 'top' is hard unless stored.
-            // Let's just leave it where dropped for now.
+            // Reset...
         }
 
         this.draggedItem = null;
@@ -168,25 +175,33 @@ const game2 = {
 
     checkDropZones: function (el) {
         const elRect = el.getBoundingClientRect();
-        let maxOverlap = 0;
+        const elCenterX = elRect.left + elRect.width / 2;
+        const elCenterY = elRect.top + elRect.height / 2;
+
+        let minDistance = Infinity;
         let bestZone = null;
+        const SNAP_THRESHOLD = 300; // Pixels
 
         document.querySelectorAll('.drop-zone').forEach(zone => {
             const zoneRect = zone.getBoundingClientRect();
+            const zoneCenterX = zoneRect.left + zoneRect.width / 2;
+            const zoneCenterY = zoneRect.top + zoneRect.height / 2;
 
-            const overlapX = Math.max(0, Math.min(elRect.right, zoneRect.right) - Math.max(elRect.left, zoneRect.left));
-            const overlapY = Math.max(0, Math.min(elRect.bottom, zoneRect.bottom) - Math.max(elRect.top, zoneRect.top));
-            const overlapArea = overlapX * overlapY;
+            const dist = Math.sqrt(
+                Math.pow(elCenterX - zoneCenterX, 2) + 
+                Math.pow(elCenterY - zoneCenterY, 2)
+            );
 
-            if (overlapArea > maxOverlap) {
-                maxOverlap = overlapArea;
+            // console.log(`Distance to zone ${zone.getAttribute('data-id')}: ${dist}`);
+
+            if (dist < SNAP_THRESHOLD && dist < minDistance) {
+                minDistance = dist;
                 bestZone = zone;
             }
             zone.classList.remove('drag-over');
         });
 
-        // Aggressive snap: As long as there is ANY overlap, pick the best one.
-        if (bestZone && maxOverlap > 0) {
+        if (bestZone) {
             bestZone.classList.add('drag-over');
             this.currentDropZone = bestZone;
         } else {
@@ -198,27 +213,32 @@ const game2 = {
         const itemId = el.getAttribute('data-id');
         const zoneId = zone.getAttribute('data-id');
 
+        console.log(`Snapping Item ${itemId} to Zone ${zoneId}`);
+
+        // Always snap visual
+        const zoneRect = zone.getBoundingClientRect();
+        const container = document.getElementById('g2-drag-container');
+        const containerRect = container.getBoundingClientRect();
+
+        el.style.left = `${zoneRect.left - containerRect.left + (zoneRect.width - el.offsetWidth) / 2}px`;
+        el.style.top = `${zoneRect.top - containerRect.top + (zoneRect.height - el.offsetHeight) / 2}px`;
+
+        // Always lock and count
+        el.style.pointerEvents = 'none';
+        this.placedCount++;
+        console.log(`Placed Count: ${this.placedCount}, Score: ${this.score}`);
+
         if (itemId === zoneId) {
-            // We need to move the element from the left column container to the game container 
-            // or just position it absolutely relative to the zone.
-            // Easiest is to append it to the zone? No, styles might break.
-            // Let's calculate position relative to the *current parent* (#g2-drag-container) 
-            // that makes it appear over the zone.
-
-            const zoneRect = zone.getBoundingClientRect();
-            const container = document.getElementById('g2-drag-container');
-            const containerRect = container.getBoundingClientRect();
-
-            el.style.left = `${zoneRect.left - containerRect.left + (zoneRect.width - el.offsetWidth) / 2}px`;
-            el.style.top = `${zoneRect.top - containerRect.top + (zoneRect.height - el.offsetHeight) / 2}px`;
-
             zone.classList.add('correct');
-            el.style.pointerEvents = 'none';
             this.score++;
+        } else {
+            zone.classList.add('wrong');
+        }
 
-            if (this.score >= this.targetScore) {
-                setTimeout(() => this.endGame(true), 500);
-            }
+        // Check completion (4 items)
+        if (this.placedCount >= 4) {
+            console.log('Game Over triggered');
+            setTimeout(() => this.endGame(this.score >= this.targetScore), 500);
         }
     },
 

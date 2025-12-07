@@ -1,7 +1,7 @@
 const app = {
     currentScreen: 'screen-1',
     idleTimer: null,
-    idleTimeout: 60000, // 60 seconds to reset to home
+    idleTimeout: 300000, // 60 seconds to reset to home
 
     keyboard: null,
 
@@ -23,6 +23,9 @@ const app = {
     },
 
     showScreen: function (screenId) {
+        // Stop any confetti if running
+        if (typeof confettiEffect !== 'undefined') confettiEffect.stop();
+
         // Hide current
         const current = document.getElementById(this.currentScreen);
         if (current) {
@@ -51,8 +54,11 @@ const app = {
                 this.setLedColor(255, 0, 0); // Game 1 Red
             } else if (['screen-9', 'screen-10', 'screen-11'].includes(screenId)) {
                 this.setLedColor(0, 255, 0); // Game 2 Green
-            } else if (['screen-12', 'screen-13', 'screen-14', 'screen-15'].includes(screenId)) {
+            } else if (screenId === 'screen-15') {
                 this.setLedColor(0, 0, 255); // Game 3 Blue
+            } else if (screenId === 'screen-game1-reward') {
+                this.setLedColor(0, 255, 0); // Win Green
+                if (typeof confettiEffect !== 'undefined') confettiEffect.start();
             }
 
             // Reset inputs if showing input screen

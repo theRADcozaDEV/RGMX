@@ -24,6 +24,10 @@ const game1 = {
         let zonesClass = 'd-flex justify-content-around w-100 position-absolute';
         let zonesStyle = 'top: 40%; padding: 0 5%;';
 
+        // Drag Container Defaults (Stage 1)
+        let dragClass = 'w-100 position-absolute d-flex justify-content-around align-items-center';
+        let dragStyle = 'bottom: 2%; height: 40%; padding: 0 5%;';
+
         if (stage === 1) {
             zonesHtml = `
                 <div class="drop-zone" data-id="1">1</div>
@@ -40,6 +44,10 @@ const game1 = {
             // Tighter spacing for Stage 2
             zonesClass = 'd-flex justify-content-center w-100 position-absolute';
             zonesStyle += ' gap: 10px;';
+
+            // Match Drag Container to Zones
+            dragClass = 'w-100 position-absolute d-flex justify-content-center align-items-center';
+            dragStyle += ' gap: 10px;';
         }
 
         container.innerHTML = `
@@ -51,7 +59,7 @@ const game1 = {
             </div>
 
             <!-- Draggable Items (Bottom) - Flex Container -->
-            <div id="drag-container-${stage}" class="w-100 position-absolute d-flex justify-content-around align-items-center" style="bottom: 2%; height: 40%; padding: 0 5%;"></div>
+            <div id="drag-container-${stage}" class="${dragClass}" style="${dragStyle}"></div>
         `;
 
         this.createDraggableItems(stage);
@@ -70,9 +78,17 @@ const game1 = {
             // Create Slot
             const slot = document.createElement('div');
             slot.className = 'd-flex justify-content-center align-items-center';
-            slot.style.flex = '1';
+            
+            if (stage === 1) {
+                slot.style.flex = '1';
+                slot.style.padding = '0 15px'; // Add spacing
+            } else {
+                // Stage 2: Fixed width to match drop zones (150px)
+                slot.style.width = '150px';
+                slot.style.flex = 'none';
+            }
+
             slot.style.height = '100%';
-            slot.style.padding = '0 15px'; // Add spacing
 
             // Create Item
             const el = document.createElement('div');
@@ -270,7 +286,8 @@ const game1 = {
         this.isPlaying = false;
         if (this.timerInstance) this.timerInstance.stop();
         if (win) {
-            app.nextAfterGame();
+            // Show 10 Points Reward Screen
+            app.showScreen('screen-game1-reward');
         } else {
             app.showScreen('screen-8');
         }

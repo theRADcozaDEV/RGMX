@@ -32,8 +32,8 @@ const game3 = {
                 <h2 class="text-white display-4">Select the correct items!</h2>
             </div>
             
-            <div class="d-flex flex-wrap justify-content-center align-content-center w-100 h-100" style="padding-top: 20%;">
-                <div class="d-flex flex-wrap justify-content-center" style="gap: 20px; max-width: 900px;">
+            <div class="d-flex flex-wrap justify-content-center align-content-center w-100 h-100" style="padding-top: 50%;">
+                <div class="d-flex flex-wrap justify-content-center" style="gap: 20px; max-width: 600px; width: 100%;">
                     <!-- 6 Grid Items -->
                     ${this.generateGridItems(stageNum)}
                 </div>
@@ -43,6 +43,18 @@ const game3 = {
         // Add click listeners
         const items = container.querySelectorAll('.grid-item');
         items.forEach(item => {
+            // Enforce 3 columns styling - Transparent Hot Zones
+            // Using fixed width/height for rigid layout
+            item.style.width = '150px'; 
+            item.style.height = '272px'; 
+            // item.style.border = '2px solid red'; // Debug: Comment out for production
+            item.style.cursor = 'pointer';
+            item.style.flex = 'none'; // Disable flex grow/shrink behavior if needed, or just let wrap handle it
+            
+            // Visual feedback handled by adding classes 'correct' (check) or 'wrong' (x)
+            // We can add an inner element for the tick/cross mark
+            item.innerHTML = '<div class="feedback-mark w-100 h-100 d-flex justify-content-center align-items-center" style="font-size: 3rem; display: none;"></div>';
+            
             item.addEventListener('click', () => this.handleItemClick(item));
         });
 
@@ -52,7 +64,7 @@ const game3 = {
         // User said "same for game 3 gameplay 2", implying similar mechanic. 
         // Usually stages share time or have new time. Let's give new time for simplicity or shared?
         // Let's give 20s per stage for now.
-        this.timerInstance = new CountdownTimer(`g3-timer-container-${stageNum}`, 20, () => this.endGame(false));
+        this.timerInstance = new CountdownTimer(`g3-timer-container-${stageNum}`, 300, () => this.endGame(false));
         this.timerInstance.start();
     },
 
@@ -62,7 +74,7 @@ const game3 = {
         this.correctItems = ['1', '3', '5'];
         let html = '';
         for (let i = 1; i <= 6; i++) {
-            html += `<div class="grid-item" data-id="${i}">Item ${i}</div>`;
+            html += `<div class="grid-item" data-id="${i}"></div>`;
         }
         return html;
     },
@@ -72,20 +84,23 @@ const game3 = {
         if (el.classList.contains('correct') || el.classList.contains('wrong')) return;
 
         const id = el.getAttribute('data-id');
+        const feedback = el.querySelector('.feedback-mark');
+        feedback.style.display = 'flex';
 
         if (this.correctItems.includes(id)) {
             el.classList.add('correct');
+            feedback.innerText = '✓';
+            feedback.style.color = '#00ff00';
+            feedback.style.textShadow = '0 0 10px #000';
             this.score++;
 
             // Check if all correct items found
             // For this logic, we need to know how many correct items there are total.
             // In generateGridItems we set 3 correct items.
-            const found = document.querySelectorAll(`#game3-container .grid-item.correct, #game3-stage2-container .grid-item.correct`).length;
-            // Actually we need to scope to current container
             const currentContainer = this.stage === 1 ? document.getElementById('game3-container') : document.getElementById('game3-stage2-container');
-            const currentFound = currentContainer.querySelectorAll('.grid-item.correct').length;
+            const found = currentContainer.querySelectorAll('.grid-item.correct').length;
 
-            if (currentFound >= 3) {
+            if (found >= 3) {
                 if (this.stage === 1) {
                     setTimeout(() => this.setupStage(2), 500);
                 } else {
@@ -94,6 +109,9 @@ const game3 = {
             }
         } else {
             el.classList.add('wrong');
+            feedback.innerText = '✗';
+            feedback.style.color = '#ff0000';
+            feedback.style.textShadow = '0 0 10px #000';
             // Penalty? Time reduction? Or just visual feedback.
             // Let's just show wrong.
         }
