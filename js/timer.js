@@ -20,6 +20,8 @@ class CountdownTimer {
                             <stop offset="100%" style="stop-color:#fda13d;stop-opacity:1" />
                         </linearGradient>
                     </defs>
+                    <!-- Background Circle (Black Fill) -->
+                    <circle cx="50" cy="50" r="${this.radius}" fill="#000000"></circle>
                     <circle class="countdown-circle-bg" cx="50" cy="50" r="${this.radius}"></circle>
                     <circle class="countdown-circle-fg" cx="50" cy="50" r="${this.radius}" 
                             stroke-dasharray="${this.circumference}"

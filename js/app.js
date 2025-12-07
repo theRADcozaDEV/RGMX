@@ -5,6 +5,10 @@ const app = {
 
     keyboard: null,
 
+    // Game Tracking
+    playedGames: { 1: false, 2: false, 3: false },
+    currentGameId: null,
+
     init: function () {
         console.log('App initialized');
         this.resetIdleTimer();
@@ -35,6 +39,10 @@ const app = {
             // LED Control
             if (screenId === 'screen-1') {
                 this.setLedColor(0, 100, 255); // Idle Blue
+                // Reset game progress on Home
+                this.resetProgress();
+            } else if (screenId === 'screen-2') {
+                this.updateMenuTicks();
             } else if (screenId === 'screen-7') {
                 this.setLedColor(0, 255, 0); // Win Green
             } else if (screenId === 'screen-8') {
@@ -64,13 +72,49 @@ const app = {
     },
 
     startGame: function (gameId) {
-        console.log(`Starting Game ${gameId}`);
-        if (gameId === 1) {
-            this.showScreen('screen-3');
-        } else if (gameId === 2) {
+        // Force linear progression: Always start with Game 1
+        console.log(`Starting Linear Journey (Requested Game ${gameId})`);
+        this.currentGameId = 1;
+        this.showScreen('screen-3');
+    },
+
+    nextAfterGame: function () {
+        // Mark current game as played
+        if (this.currentGameId) {
+            this.playedGames[this.currentGameId] = true;
+        }
+
+        // Linear Progression Logic
+        if (this.currentGameId === 1) {
+            // Move to Game 2
+            this.currentGameId = 2;
             this.showScreen('screen-9');
-        } else if (gameId === 3) {
+        } else if (this.currentGameId === 2) {
+            // Move to Game 3
+            this.currentGameId = 3;
             this.showScreen('screen-12');
+        } else if (this.currentGameId === 3) {
+            // All done, move to Input
+            this.showScreen('screen-input');
+        } else {
+            // Fallback
+            this.showScreen('screen-input');
+        }
+    },
+
+    resetProgress: function () {
+        this.playedGames = { 1: false, 2: false, 3: false };
+        this.currentGameId = null;
+        // Hide ticks
+        document.querySelectorAll('.tick-mark').forEach(el => el.style.display = 'none');
+    },
+
+    updateMenuTicks: function () {
+        for (let i = 1; i <= 3; i++) {
+            const tick = document.getElementById(`tick-${i}`);
+            if (tick) {
+                tick.style.display = this.playedGames[i] ? 'block' : 'none';
+            }
         }
     },
 
@@ -83,7 +127,9 @@ const app = {
 
     checkGameStart: function (screenId) {
         if (screenId === 'screen-5') {
-            if (typeof game1 !== 'undefined') game1.start();
+            if (typeof game1 !== 'undefined') game1.start(1);
+        } else if (screenId === 'screen-6') {
+            if (typeof game1 !== 'undefined') game1.start(2);
         } else if (screenId === 'screen-11') {
             if (typeof game2 !== 'undefined') game2.start();
         } else if (screenId === 'screen-14') {

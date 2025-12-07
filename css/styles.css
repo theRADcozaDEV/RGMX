@@ -82,8 +82,8 @@ body {
 /* Countdown Timer */
 .countdown-container {
     position: relative;
-    width: 200px;
-    height: 200px;
+    width: 100px;
+    height: 100px;
     margin: 0 auto;
 }
 
@@ -113,7 +113,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 4rem;
+    font-size: 2rem;
     font-weight: bold;
     font-family: 'Inter', sans-serif;
 }
@@ -258,4 +258,13 @@ body {
     left: 19.9%;
     width: 58.8%;
     height: 7.8%;
+}
+
+/* Tick Marks */
+.tick-mark {
+    font-size: 4rem;
+    color: #ff0000;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
 }

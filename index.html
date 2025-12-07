@@ -16,7 +16,8 @@
 
         <!-- Screen 1: Home / Attract Mode -->
         <div id="screen-1" class="screen active" style="background-image: url('assets/screen1.png');">
-            <div class="pulse-btn btn-screen1-start" onclick="app.showScreen('screen-2')"></div>
+            <div class="pulse-btn btn-screen1-start"></div>
+            <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-2')"></button>
         </div>
 
         <!-- Screen 2: Menu -->
@@ -28,16 +29,19 @@
                 onclick="app.startGame(2)"></div>
             <div class="position-absolute" style="top: 70%; left: 10%; width: 80%; height: 15%;"
                 onclick="app.startGame(3)"></div>
+
+            <!-- Tick Marks (Hidden by default) -->
+            <div id="tick-1" class="tick-mark position-absolute" style="top: 32%; left: 80%; display: none;">✓</div>
+            <div id="tick-2" class="tick-mark position-absolute" style="top: 52%; left: 80%; display: none;">✓</div>
+            <div id="tick-3" class="tick-mark position-absolute" style="top: 72%; left: 80%; display: none;">✓</div>
         </div>
 
         <!-- Game 1 Screens -->
         <div id="screen-3" class="screen" style="background-image: url('assets/screen3_game1_screen1.png');">
-            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
-                onclick="app.showScreen('screen-4')">Next</button>
+            <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-4')"></button>
         </div>
         <div id="screen-4" class="screen" style="background-image: url('assets/screen4_game1_screen2.png');">
-            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
-                onclick="app.showScreen('screen-5')">Play</button>
+            <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-5')"></button>
         </div>
         <div id="screen-5" class="screen" style="background-image: url('assets/screen5_game1_gameplay1.png');">
             <!-- Game 1 Logic Container Stage 1 -->
@@ -50,12 +54,10 @@
 
         <!-- Game 2 Screens -->
         <div id="screen-9" class="screen" style="background-image: url('assets/screen9_game2_screen1.png');">
-            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
-                onclick="app.showScreen('screen-10')">Next</button>
+            <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-10')"></button>
         </div>
         <div id="screen-10" class="screen" style="background-image: url('assets/screen10_game2_screen2.png');">
-            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
-                onclick="app.showScreen('screen-11')">Play</button>
+            <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-11')"></button>
         </div>
         <div id="screen-11" class="screen" style="background-image: url('assets/screen11_game2_gameplay1.png');">
             <!-- Game 2 Logic Container -->
@@ -64,12 +66,10 @@
 
         <!-- Game 3 Screens -->
         <div id="screen-12" class="screen" style="background-image: url('assets/screen12_game3_screen1.png');">
-            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
-                onclick="app.showScreen('screen-13')">Next</button>
+            <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-13')"></button>
         </div>
         <div id="screen-13" class="screen" style="background-image: url('assets/screen13_game3_screen2.png');">
-            <button class="btn btn-primary position-absolute bottom-10 start-50 translate-middle-x"
-                onclick="app.showScreen('screen-14')">Play</button>
+            <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-14')"></button>
         </div>
         <div id="screen-14" class="screen" style="background-image: url('assets/screen14_game3_gameplay1.png');">
             <!-- Game 3 Logic Container -->
@@ -82,10 +82,10 @@
 
         <!-- Common End Screens -->
         <div id="screen-7" class="screen" style="background-image: url('assets/screen7_game_win.png');">
-            <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-input')"></button>
+            <button class="btn btn-invisible w-100 h-100" onclick="app.nextAfterGame()"></button>
         </div>
         <div id="screen-8" class="screen" style="background-image: url('assets/screen8_game_timeout.png');">
-            <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-input')"></button>
+            <button class="btn btn-invisible w-100 h-100" onclick="app.nextAfterGame()"></button>
         </div>
 
         <!-- Input Screen -->
