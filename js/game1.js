@@ -43,11 +43,11 @@ const game1 = {
             `;
             // Tighter spacing for Stage 2
             zonesClass = 'd-flex justify-content-center w-100 position-absolute';
-            zonesStyle += ' gap: 10px;';
+            zonesStyle += ' gap: 100px;';
 
             // Match Drag Container to Zones
             dragClass = 'w-100 position-absolute d-flex justify-content-center align-items-center';
-            dragStyle += ' gap: 10px;';
+            dragStyle += ' gap: 100px;';
         }
 
         container.innerHTML = `
@@ -84,7 +84,7 @@ const game1 = {
                 slot.style.padding = '0 15px'; // Add spacing
             } else {
                 // Stage 2: Fixed width to match drop zones (150px)
-                slot.style.width = '170px';
+                slot.style.width = '150px';
                 slot.style.flex = 'none';
             }
 
