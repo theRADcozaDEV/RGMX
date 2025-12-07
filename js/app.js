@@ -19,7 +19,7 @@ const app = {
         this.keyboard = new VirtualKeyboard('keyboard-container', ['input-name', 'input-dept']);
 
         // Initial LED Color (Idle)
-        this.setLedColor(0, 100, 255);
+        this.setLedColor(255, 255, 255);
     },
 
     showScreen: function (screenId) {
@@ -41,7 +41,7 @@ const app = {
 
             // LED Control
             if (screenId === 'screen-1') {
-                this.setLedColor(0, 100, 255); // Idle Blue
+                this.setLedColor(255, 255, 255); // Idle White
                 // Reset game progress on Home
                 this.resetProgress();
             } else if (screenId === 'screen-2') {
