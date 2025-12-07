@@ -12,7 +12,7 @@ const game2 = {
 
         const container = document.getElementById('game2-container');
         container.innerHTML = `
-            <div id="g2-timer-container" class="position-absolute top-0 start-0 m-3" style="z-index: 20;"></div>
+            <div id="g2-timer-container" class="position-absolute top-0 start-0 m-5" style="z-index: 20;"></div>
             
             <div class="d-flex w-100 h-100">
                 <!-- Column 1: Draggable Items (33%) -->

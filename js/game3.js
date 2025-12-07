@@ -27,7 +27,7 @@ const game3 = {
 
         // 2 rows, 3 columns grid
         container.innerHTML = `
-            <div id="g3-timer-container-${stageNum}" class="position-absolute top-0 start-0 m-3"></div>
+            <div id="g3-timer-container-${stageNum}" class="position-absolute top-0 start-0 m-5"></div>
             <div class="position-absolute w-100 text-center" style="top: 15%;">
                 <h2 class="text-white display-4">Select the correct items!</h2>
             </div>

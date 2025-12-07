@@ -82,8 +82,8 @@ body {
 /* Countdown Timer */
 .countdown-container {
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: 130px;
+    height: 130px;
     margin: 0 auto;
 }
 
@@ -113,7 +113,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 2rem;
+    font-size: 2.6rem;
     font-weight: bold;
     font-family: 'Inter', sans-serif;
 }
@@ -141,22 +141,25 @@ body {
     background-color: rgba(0, 255, 0, 0.2);
 }
 
+.drop-zone.wrong {
+    border-color: #ff0000;
+    background-color: rgba(255, 0, 0, 0.2);
+    animation: shake 0.5s;
+}
+
 .draggable-item {
-    width: 120px;
-    height: 120px;
-    background-color: #fe554a;
-    border-radius: 10px;
+    width: 100%;
+    max-width: 208px;
+    aspect-ratio: 208 / 412;
+    background-color: transparent;
     cursor: grab;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-weight: bold;
-    font-size: 2rem;
     touch-action: none;
     /* Important for touch events */
-    position: absolute;
+    position: relative;
     z-index: 100;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .draggable-item.dragging {

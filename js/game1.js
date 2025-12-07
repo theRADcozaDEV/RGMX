@@ -5,19 +5,25 @@ const game1 = {
     isPlaying: false,
     stage: 1,
     draggedItem: null,
+    originalParent: null,
 
     start: function (stage = 1) {
         console.log(`Game 1 Stage ${stage} Started`);
         this.stage = stage;
         this.score = 0;
+        this.itemsPlaced = 0; // Track placed items
         this.isPlaying = true;
         this.targetScore = stage === 1 ? 4 : 3;
+        // ... rest of start ...
 
         const containerId = stage === 1 ? 'game1-container' : 'game1-stage2-container';
         const container = document.getElementById(containerId);
 
         // HTML Structure
         let zonesHtml = '';
+        let zonesClass = 'd-flex justify-content-around w-100 position-absolute';
+        let zonesStyle = 'top: 40%; padding: 0 5%;';
+
         if (stage === 1) {
             zonesHtml = `
                 <div class="drop-zone" data-id="1">1</div>
@@ -31,54 +37,57 @@ const game1 = {
                 <div class="drop-zone" data-id="2">2</div>
                 <div class="drop-zone" data-id="3">3</div>
             `;
+            // Tighter spacing for Stage 2
+            zonesClass = 'd-flex justify-content-center w-100 position-absolute';
+            zonesStyle += ' gap: 10px;';
         }
 
         container.innerHTML = `
-            <div id="g1-timer-container-${stage}" class="position-absolute top-0 start-0 m-3"></div>
+            <div id="g1-timer-container-${stage}" class="position-absolute top-0 start-0 m-5"></div>
             
             <!-- Drop Zones (Top) -->
-            <div class="d-flex justify-content-around w-100 position-absolute" style="top: 20%;">
+            <div class="${zonesClass}" style="${zonesStyle}">
                 ${zonesHtml}
             </div>
 
-            <!-- Draggable Items (Bottom) -->
-            <div id="drag-container-${stage}" class="w-100 h-100 position-relative"></div>
+            <!-- Draggable Items (Bottom) - Flex Container -->
+            <div id="drag-container-${stage}" class="w-100 position-absolute d-flex justify-content-around align-items-center" style="bottom: 2%; height: 40%; padding: 0 5%;"></div>
         `;
 
         this.createDraggableItems(stage);
         this.setupDragEvents();
 
         if (this.timerInstance) this.timerInstance.stop();
-        this.timerInstance = new CountdownTimer(`g1-timer-container-${stage}`, 20, () => this.endGame(false));
+        this.timerInstance = new CountdownTimer(`g1-timer-container-${stage}`, 300, () => this.endGame(false));
         this.timerInstance.start();
     },
 
     createDraggableItems: function (stage) {
         const container = document.getElementById(`drag-container-${stage}`);
-        let items = [];
+        const itemCount = stage === 1 ? 4 : 3;
 
-        if (stage === 1) {
-            items = [
-                { id: 1, text: '1', left: '10%', top: '70%' },
-                { id: 2, text: '2', left: '30%', top: '70%' },
-                { id: 3, text: '3', left: '50%', top: '70%' },
-                { id: 4, text: '4', left: '70%', top: '70%' }
-            ];
-        } else {
-            items = [
-                { id: 1, text: '1', left: '20%', top: '70%' },
-                { id: 2, text: '2', left: '50%', top: '70%' },
-                { id: 3, text: '3', left: '80%', top: '70%' }
-            ];
-        }
+        for (let i = 1; i <= itemCount; i++) {
+            // Create Slot
+            const slot = document.createElement('div');
+            slot.className = 'd-flex justify-content-center align-items-center';
+            slot.style.flex = '1';
+            slot.style.height = '100%';
+            slot.style.padding = '0 15px'; // Add spacing
 
-        items.forEach(item => {
+            // Create Item
             const el = document.createElement('div');
             el.className = 'draggable-item';
-            el.setAttribute('data-id', item.id);
-            el.innerText = item.text;
-            el.style.left = item.left;
-            el.style.top = item.top;
+            el.setAttribute('data-id', i);
+
+            const imgPath = `assets/piece_game1_${stage}_${i}.png`;
+            el.style.backgroundImage = `url('${imgPath}')`;
+            el.style.position = 'relative'; // Start relative
+            el.style.left = 'auto';
+            el.style.top = 'auto';
+
+            if (stage === 2) {
+                el.style.maxWidth = '150px';
+            }
 
             // Touch events
             el.addEventListener('touchstart', (e) => this.handleDragStart(e, el), { passive: false });
@@ -88,25 +97,44 @@ const game1 = {
             // Mouse events
             el.addEventListener('mousedown', (e) => this.handleDragStart(e, el));
 
-            container.appendChild(el);
-        });
+            slot.appendChild(el);
+            container.appendChild(slot);
+        }
 
         // Global mouse move/up for desktop
         document.addEventListener('mousemove', (e) => this.handleGlobalMouseMove(e));
         document.addEventListener('mouseup', (e) => this.handleGlobalMouseUp(e));
     },
 
-    // ... drag handlers remain mostly the same ...
-    // I need to update snapToZone to handle stage progression
+    setupDragEvents: function () {
+        // Handled in createDraggableItems
+    },
 
     handleDragStart: function (e, el) {
         if (!this.isPlaying) return;
         e.preventDefault();
+        if (this.draggedItem) return;
+
         this.draggedItem = el;
+        this.originalParent = el.parentElement; // Save slot
         el.classList.add('dragging');
 
-        const touch = e.touches ? e.touches[0] : e;
+        // Detach from slot and attach to game container to allow free movement
         const rect = el.getBoundingClientRect();
+        const container = document.getElementById(this.stage === 1 ? 'game1-container' : 'game1-stage2-container');
+        const containerRect = container.getBoundingClientRect();
+
+        // Lock size
+        el.style.width = rect.width + 'px';
+        el.style.height = rect.height + 'px';
+
+        el.style.position = 'absolute';
+        el.style.left = (rect.left - containerRect.left) + 'px';
+        el.style.top = (rect.top - containerRect.top) + 'px';
+
+        container.appendChild(el);
+
+        const touch = e.touches ? e.touches[0] : e;
         this.offsetX = touch.clientX - rect.left;
         this.offsetY = touch.clientY - rect.top;
     },
@@ -137,6 +165,8 @@ const game1 = {
 
         if (this.currentDropZone) {
             this.snapToZone(el, this.currentDropZone);
+        } else {
+            this.revertToSlot(el);
         }
 
         this.draggedItem = null;
@@ -145,15 +175,11 @@ const game1 = {
     },
 
     handleGlobalMouseMove: function (e) {
-        if (this.draggedItem) {
-            this.handleDragMove(e, this.draggedItem);
-        }
+        if (this.draggedItem) this.handleDragMove(e, this.draggedItem);
     },
 
     handleGlobalMouseUp: function (e) {
-        if (this.draggedItem) {
-            this.handleDragEnd(e, this.draggedItem);
-        }
+        if (this.draggedItem) this.handleDragEnd(e, this.draggedItem);
     },
 
     checkDropZones: function (el) {
@@ -162,7 +188,11 @@ const game1 = {
         let bestZone = null;
 
         document.querySelectorAll('.drop-zone').forEach(zone => {
+            // Ignore if already occupied
+            if (zone.classList.contains('occupied')) return;
+
             const zoneRect = zone.getBoundingClientRect();
+
             const overlapX = Math.max(0, Math.min(elRect.right, zoneRect.right) - Math.max(elRect.left, zoneRect.left));
             const overlapY = Math.max(0, Math.min(elRect.bottom, zoneRect.bottom) - Math.max(elRect.top, zoneRect.top));
             const overlapArea = overlapX * overlapY;
@@ -186,42 +216,63 @@ const game1 = {
         const itemId = el.getAttribute('data-id');
         const zoneId = zone.getAttribute('data-id');
 
+        // Snap visual
+        const zoneRect = zone.getBoundingClientRect();
+        const container = document.getElementById(this.stage === 1 ? 'game1-container' : 'game1-stage2-container');
+        const containerRect = container.getBoundingClientRect();
+
+        el.style.left = `${zoneRect.left - containerRect.left + (zoneRect.width - el.offsetWidth) / 2}px`;
+        el.style.top = `${zoneRect.top - containerRect.top + (zoneRect.height - el.offsetHeight) / 2}px`;
+
+        // Mark as placed and occupied
+        zone.classList.add('occupied');
+        el.style.pointerEvents = 'none'; // Lock item
+        this.itemsPlaced++;
+
         if (itemId === zoneId) {
-            const zoneRect = zone.getBoundingClientRect();
-            const container = document.getElementById(this.stage === 1 ? 'game1-container' : 'game1-stage2-container');
-            const containerRect = container.getBoundingClientRect();
-
-            el.style.left = `${zoneRect.left - containerRect.left + (zoneRect.width - el.offsetWidth) / 2}px`;
-            el.style.top = `${zoneRect.top - containerRect.top + (zoneRect.height - el.offsetHeight) / 2}px`;
-
+            // Correct
             zone.classList.add('correct');
-            el.style.pointerEvents = 'none';
             this.score++;
+        } else {
+            // Wrong but placed
+            zone.classList.add('wrong');
+        }
 
-            if (this.score >= this.targetScore) {
-                setTimeout(() => this.endGame(true), 500);
+        // Check for Game Over (All items placed)
+        if (this.itemsPlaced >= this.targetScore) {
+            const won = this.score === this.targetScore;
+
+            if (this.stage === 1) {
+                // Always go to Stage 2
+                setTimeout(() => app.showScreen('screen-6'), 500);
+            } else {
+                setTimeout(() => this.endGame(won), 500);
             }
         }
     },
 
-    setupDragEvents: function () {
-        // Handled in createDraggableItems
+    revertToSlot: function (el) {
+        if (this.originalParent) {
+            el.style.position = 'relative';
+            el.style.left = 'auto';
+            el.style.top = 'auto';
+            el.style.removeProperty('width');
+            el.style.removeProperty('height');
+            el.style.removeProperty('position');
+            el.style.removeProperty('left');
+            el.style.removeProperty('top');
+
+            this.originalParent.appendChild(el);
+        }
     },
 
     endGame: function (win) {
         this.isPlaying = false;
         if (this.timerInstance) this.timerInstance.stop();
-
         if (win) {
-            if (this.stage === 1) {
-                // Go to Stage 2 (Screen 6)
-                app.showScreen('screen-6');
-            } else {
-                // Win Game
-                app.showScreen('screen-7');
-            }
+            app.nextAfterGame();
         } else {
-            app.showScreen('screen-8'); // Timeout
+            app.showScreen('screen-8');
         }
     }
 };
