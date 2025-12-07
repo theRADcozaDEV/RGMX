@@ -86,6 +86,14 @@ const app = {
         }
     },
 
+    showReward: function (points) {
+        const screen = document.getElementById('screen-game1-reward');
+        if (screen) {
+            screen.style.backgroundImage = `url('assets/game_${points}_point.png')`;
+            this.showScreen('screen-game1-reward');
+        }
+    },
+
     startGame: function (gameId) {
         // Force linear progression: Always start with Game 1
         console.log(`Starting Linear Journey (Requested Game ${gameId})`);

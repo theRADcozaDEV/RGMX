@@ -29,7 +29,7 @@ const game3 = {
         container.innerHTML = `
             <div id="g3-timer-container-${stageNum}" class="position-absolute top-0 start-0 m-5"></div>
             <div class="position-absolute w-100 text-center" style="top: 15%;">
-                <h2 class="text-white display-4">Select the correct items!</h2>
+                
             </div>
             
             <div class="d-flex flex-wrap justify-content-center align-content-center w-100 h-100" style="padding-top: 50%;">
@@ -121,7 +121,7 @@ const game3 = {
         this.isPlaying = false;
         if (this.timerInstance) this.timerInstance.stop();
         if (win) {
-            app.showScreen('screen-7');
+            app.showReward(40);
         } else {
             app.showScreen('screen-8');
         }

@@ -246,7 +246,7 @@ const game2 = {
         this.isPlaying = false;
         if (this.timerInstance) this.timerInstance.stop();
         if (win) {
-            app.showScreen('screen-7');
+            app.showReward(20);
         } else {
             app.showScreen('screen-8');
         }

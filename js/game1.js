@@ -287,7 +287,7 @@ const game1 = {
         if (this.timerInstance) this.timerInstance.stop();
         if (win) {
             // Show 10 Points Reward Screen
-            app.showScreen('screen-game1-reward');
+            app.showReward(10);
         } else {
             app.showScreen('screen-8');
         }

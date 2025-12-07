@@ -16,7 +16,7 @@
 
         <!-- Screen 1: Home / Attract Mode -->
         <div id="screen-1" class="screen active" style="background-image: url('assets/screen1.png');">
-            <div class="pulse-btn btn-screen1-start"></div>
+            <div class="pulse-btn btn-screen1-start" onclick="app.showScreen('screen-2')"></div>
             <button class="btn btn-invisible w-100 h-100" onclick="app.showScreen('screen-2')"></button>
         </div>
 
@@ -125,48 +125,46 @@
         </div>
 
         <!-- Leaderboard Screen -->
-        <div id="screen-leaderboard" class="screen" style="background-image: url('assets/dark_backgroup.jpg'); background-size: cover; background-position: center;">
+        <div id="screen-leaderboard" class="screen" style="background-image: url('assets/dark_backgroup.jpg'); background-size: cover; background-position: center;" onclick="app.showScreen('screen-1')">
             <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
                 <h1 class="text-white fw-bold mb-5" style="font-size: 54px; text-shadow: 2px 2px 4px #000;">LEADERBOARD</h1>
                 
                 <div class="w-75">
                     <!-- Rows -->
                     <!-- 1st Place (Bigger) -->
-                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-4 mb-3 rounded border border-white" style="font-size: 32px; box-shadow: 0 0 15px rgba(255,0,0,0.5);">
+                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-3 mb-2 rounded border border-white" style="font-size: 26px; box-shadow: 0 0 15px rgba(255,0,0,0.5);">
                         <div style="width: 15%; font-weight: bold; color: white;">1st</div>
                         <div style="width: 60%; font-weight: bold;">Sarah Connor</div>
                         <div style="width: 25%; text-align: right; font-weight: bold;">70</div>
                     </div>
                     <!-- 2nd Place (Bigger) -->
-                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-4 mb-3 rounded border border-white" style="font-size: 32px; box-shadow: 0 0 15px rgba(255,0,0,0.5);">
+                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-3 mb-2 rounded border border-white" style="font-size: 26px; box-shadow: 0 0 15px rgba(255,0,0,0.5);">
                         <div style="width: 15%; font-weight: bold; color: white;">2nd</div>
                         <div style="width: 60%; font-weight: bold;">John Matrix</div>
                         <div style="width: 25%; text-align: right; font-weight: bold;">70</div>
                     </div>
                     <!-- 3rd Place (Bigger) -->
-                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-4 mb-3 rounded border border-white" style="font-size: 32px; box-shadow: 0 0 15px rgba(255,0,0,0.5);">
+                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-3 mb-2 rounded border border-white" style="font-size: 26px; box-shadow: 0 0 15px rgba(255,0,0,0.5);">
                         <div style="width: 15%; font-weight: bold; color: white;">3rd</div>
                         <div style="width: 60%; font-weight: bold;">Dutch Schaefer</div>
                         <div style="width: 25%; text-align: right; font-weight: bold;">60</div>
                     </div>
 
-                    <h1 class="text-white text-center fw-bold my-4">RUNNER UP</h1>
+                    <hr class="border border-white border-3 opacity-100 my-3">
                     
                     <!-- 4th Place (Normal) -->
-                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-3 mb-2 rounded border border-white" style="font-size: 24px; opacity: 0.9;">
+                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-2 mb-2 rounded border border-white" style="font-size: 20px; opacity: 0.9;">
                         <div style="width: 15%; font-weight: bold; color: white;">4th</div>
                         <div style="width: 60%;">Alan Schaefer</div>
                         <div style="width: 25%; text-align: right; font-weight: bold;">50</div>
                     </div>
                     <!-- 5th Place (Normal) -->
-                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-3 mb-2 rounded border border-white" style="font-size: 24px; opacity: 0.9;">
+                    <div class="leaderboard-row d-flex align-items-center bg-danger text-white p-2 mb-2 rounded border border-white" style="font-size: 20px; opacity: 0.9;">
                         <div style="width: 15%; font-weight: bold; color: white;">5th</div>
                         <div style="width: 60%;">Harry Tasker</div>
                         <div style="width: 25%; text-align: right; font-weight: bold;">40</div>
                     </div>
                 </div>
-
-                <button class="btn btn-primary btn-lg mt-5 w-25" onclick="app.showScreen('screen-1')">HOME</button>
             </div>
         </div>
 
