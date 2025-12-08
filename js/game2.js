@@ -51,27 +51,36 @@ const game2 = {
 
     createDraggableItems: function () {
         const container = document.getElementById('g2-drag-container');
-        // We need to position them relative to the container or just flow them?
-        // If we flow them, dragging logic needs to handle "absolute" positioning during drag.
-        // In Game 1 we used absolute positioning. Here let's try to keep them in flow initially, 
-        // but switch to absolute on drag? Or just use absolute from start.
-        // Let's use absolute within the left column for smoother drag.
-
-        const items = [
-            { id: 1, img: 'assets/piece_game2_1_1.png', top: '35%' },
-            { id: 2, img: 'assets/piece_game2_1_2.png', top: 'calc(35% + 160px)' },
-            { id: 3, img: 'assets/piece_game2_1_3.png', top: 'calc(35% + 320px)' },
-            { id: 4, img: 'assets/piece_game2_1_4.png', top: 'calc(35% + 480px)' }
+        
+        // Fixed Positions
+        const positions = [
+            '35%',
+            'calc(35% + 160px)',
+            'calc(35% + 320px)',
+            'calc(35% + 480px)'
         ];
 
-        items.forEach(item => {
+        // Items Data
+        let pieces = [
+            { id: 1, img: 'assets/piece_game2_1_1.png' },
+            { id: 2, img: 'assets/piece_game2_1_2.png' },
+            { id: 3, img: 'assets/piece_game2_1_3.png' },
+            { id: 4, img: 'assets/piece_game2_1_4.png' }
+        ];
+
+        // Shuffle Pieces
+        for (let i = pieces.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+        }
+
+        pieces.forEach((piece, index) => {
             const el = document.createElement('div');
             el.className = 'draggable-item';
-            el.setAttribute('data-id', item.id);
-            // el.innerText = item.text; // Removed text
+            el.setAttribute('data-id', piece.id);
             
             // Image styling
-            el.style.backgroundImage = `url('${item.img}')`;
+            el.style.backgroundImage = `url('${piece.img}')`;
             el.style.backgroundSize = 'contain';
             el.style.backgroundRepeat = 'no-repeat';
             el.style.backgroundPosition = 'center';
@@ -79,7 +88,7 @@ const game2 = {
             el.style.height = '150px';
 
             el.style.position = 'absolute';
-            el.style.top = item.top;
+            el.style.top = positions[index];
             // Center horizontally in the 33% column
             el.style.left = '50%';
             el.style.transform = 'translateX(-50%)';

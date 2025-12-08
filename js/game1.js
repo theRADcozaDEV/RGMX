@@ -78,7 +78,15 @@ const game1 = {
         const container = document.getElementById(`drag-container-${stage}`);
         const itemCount = stage === 1 ? 4 : 3;
 
-        for (let i = 1; i <= itemCount; i++) {
+        // Create and shuffle IDs
+        let items = [];
+        for (let i = 1; i <= itemCount; i++) items.push(i);
+        for (let i = items.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [items[i], items[j]] = [items[j], items[i]];
+        }
+
+        items.forEach(i => {
             // Create Slot
             const slot = document.createElement('div');
             slot.className = 'd-flex justify-content-center align-items-center';
@@ -119,7 +127,7 @@ const game1 = {
 
             slot.appendChild(el);
             container.appendChild(slot);
-        }
+        });
 
         // Global mouse move/up for desktop
         document.addEventListener('mousemove', (e) => this.handleGlobalMouseMove(e));
