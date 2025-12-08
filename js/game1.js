@@ -70,7 +70,7 @@ const game1 = {
         this.setupDragEvents();
 
         if (this.timerInstance) this.timerInstance.stop();
-        this.timerInstance = new CountdownTimer(`g1-timer-container-${stage}`, 300, () => this.endGame(false));
+        this.timerInstance = new CountdownTimer(`g1-timer-container-${stage}`, 20, () => this.endGame(false));
         this.timerInstance.start();
     },
 

@@ -64,7 +64,7 @@ const game3 = {
         // User said "same for game 3 gameplay 2", implying similar mechanic. 
         // Usually stages share time or have new time. Let's give new time for simplicity or shared?
         // Let's give 20s per stage for now.
-        this.timerInstance = new CountdownTimer(`g3-timer-container-${stageNum}`, 300, () => this.endGame(false));
+        this.timerInstance = new CountdownTimer(`g3-timer-container-${stageNum}`, 20, () => this.endGame(false));
         this.timerInstance.start();
     },
 
