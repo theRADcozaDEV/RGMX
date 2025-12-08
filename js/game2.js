@@ -230,15 +230,22 @@ const game2 = {
 
         if (itemId === zoneId) {
             zone.classList.add('correct');
-            this.score++;
+            this.score += 20;
+            console.log(`Game 2: Correct! Score: ${this.score}`);
         } else {
             zone.classList.add('wrong');
+            this.score -= 10;
+            console.log(`Game 2: Wrong! Score: ${this.score}`);
         }
 
         // Check completion (4 items)
         if (this.placedCount >= 4) {
             console.log('Game Over triggered');
-            setTimeout(() => this.endGame(this.score >= this.targetScore, false), 500);
+            // Win if max score (80) or just finish? 
+            // Passing true/false for 'win' primarily affects which screen is shown (Reward vs Next).
+            // If perfect score (80), show Reward?
+            const perfectScore = 80;
+            setTimeout(() => this.endGame(this.score === perfectScore, false), 500);
         }
     },
 
