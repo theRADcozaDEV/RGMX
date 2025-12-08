@@ -116,6 +116,23 @@ const app = {
     showReward: function (points) {
         const screen = document.getElementById('screen-game1-reward');
         if (screen) {
+            // Update text based on next game
+            const title = document.getElementById('reward-title');
+            const subtitle = document.getElementById('reward-subtitle');
+            
+            if (title && subtitle) {
+                if (this.currentGameId === 1) {
+                    title.innerHTML = 'Get ready to play <span class="fw-bold">GAME TWO</span>';
+                    subtitle.innerText = 'MATCH PACK WITH THE KPI';
+                } else if (this.currentGameId === 2) {
+                    title.innerHTML = 'Get ready to play <span class="fw-bold">GAME THREE</span>';
+                    subtitle.innerText = 'KNOW YOUR SKUs';
+                } else {
+                    title.innerHTML = 'Get ready for <span class="fw-bold">LEADERBOARD</span>';
+                    subtitle.innerText = 'JOIN THE RANKS';
+                }
+            }
+
             // screen.style.backgroundImage = `url('assets/game_${points}_point.png')`; // Disabled dynamic image
             this.showScreen('screen-game1-reward');
         }
