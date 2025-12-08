@@ -1,5 +1,6 @@
 const game1 = {
     score: 0,
+    totalScore: 0, // Track total correct across stages
     targetScore: 4, // 4 items to place
     timerInstance: null,
     isPlaying: false,
@@ -11,6 +12,9 @@ const game1 = {
         console.log(`Game 1 Stage ${stage} Started`);
         this.stage = stage;
         this.score = 0;
+        if (stage === 1) {
+            this.totalScore = 0; // Reset total score only at start of game
+        }
         this.itemsPlaced = 0; // Track placed items
         this.isPlaying = true;
         this.targetScore = stage === 1 ? 4 : 3;
@@ -249,6 +253,7 @@ const game1 = {
             // Correct
             zone.classList.add('correct');
             this.score++;
+            this.totalScore++;
         } else {
             // Wrong but placed
             zone.classList.add('wrong');
@@ -256,13 +261,13 @@ const game1 = {
 
         // Check for Game Over (All items placed)
         if (this.itemsPlaced >= this.targetScore) {
-            const won = this.score === this.targetScore;
-
             if (this.stage === 1) {
                 // Always go to Stage 2
                 setTimeout(() => app.showScreen('screen-6'), 500);
             } else {
-                setTimeout(() => this.endGame(won), 500);
+                // Win if Perfect Score (7 total)
+                const won = this.totalScore === 7;
+                setTimeout(() => this.endGame(won, false), 500);
             }
         }
     },
@@ -283,11 +288,12 @@ const game1 = {
     },
 
     endGame: function (win, isTimeout = false) {
+        console.log(`Game 1 Ended. Win: ${win}, Timeout: ${isTimeout}, Total Score: ${this.totalScore}`);
         this.isPlaying = false;
         if (this.timerInstance) this.timerInstance.stop();
         if (win) {
-            // Show 10 Points Reward Screen
-            app.showReward(10);
+            // Show 100 Points Reward Screen
+            app.showReward(100);
         } else if (isTimeout) {
             app.showScreen('screen-8');
         } else {

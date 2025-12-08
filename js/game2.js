@@ -238,17 +238,20 @@ const game2 = {
         // Check completion (4 items)
         if (this.placedCount >= 4) {
             console.log('Game Over triggered');
-            setTimeout(() => this.endGame(this.score >= this.targetScore), 500);
+            setTimeout(() => this.endGame(this.score >= this.targetScore, false), 500);
         }
     },
 
-    endGame: function (win) {
+    endGame: function (win, isTimeout = false) {
+        console.log(`Game 2 Ended. Win: ${win}, Timeout: ${isTimeout}, Score: ${this.score}`);
         this.isPlaying = false;
         if (this.timerInstance) this.timerInstance.stop();
         if (win) {
             app.showReward(20);
-        } else {
+        } else if (isTimeout) {
             app.showScreen('screen-8');
+        } else {
+            app.showScreen('screen-next');
         }
     }
 };

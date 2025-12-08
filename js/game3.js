@@ -118,6 +118,7 @@ const game3 = {
     },
 
     endGame: function (win, isTimeout = false) {
+        console.log(`Game 3 Ended. Win: ${win}, Timeout: ${isTimeout}, Score: ${this.score}`);
         this.isPlaying = false;
         if (this.timerInstance) this.timerInstance.stop();
         if (win) {

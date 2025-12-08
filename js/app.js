@@ -80,9 +80,18 @@ const app = {
             if (screenId === 'screen-input') {
                 // Calculate Score
                 let totalPoints = 0;
-                if (typeof game1 !== 'undefined' && game1.score >= 3) totalPoints += 10;
+                // Game 1: Must get 7/7 correct
+                if (typeof game1 !== 'undefined' && game1.totalScore === 7) totalPoints += 100;
+                
+                // Game 2 check (existing logic, to be updated later if needed)
                 if (typeof game2 !== 'undefined' && game2.score >= 4) totalPoints += 20;
                 if (typeof game3 !== 'undefined' && game3.score >= 6) totalPoints += 40;
+
+                console.log('--- Score Calculation ---');
+                console.log(`Game 1: Score=${typeof game1 !== 'undefined' ? game1.totalScore : 'N/A'} (Need 7) => ${typeof game1 !== 'undefined' && game1.totalScore === 7 ? 100 : 0} pts`);
+                console.log(`Game 2: Score=${typeof game2 !== 'undefined' ? game2.score : 'N/A'} (Need 4) => ${typeof game2 !== 'undefined' && game2.score >= 4 ? 20 : 0} pts`);
+                console.log(`Game 3: Score=${typeof game3 !== 'undefined' ? game3.score : 'N/A'} (Need 6) => ${typeof game3 !== 'undefined' && game3.score >= 6 ? 40 : 0} pts`);
+                console.log(`Total Points: ${totalPoints}`);
 
                 const scoreDisplay = document.getElementById('total-score-value');
                 if (scoreDisplay) scoreDisplay.innerText = totalPoints;
@@ -104,7 +113,7 @@ const app = {
     showReward: function (points) {
         const screen = document.getElementById('screen-game1-reward');
         if (screen) {
-            screen.style.backgroundImage = `url('assets/game_${points}_point.png')`;
+            // screen.style.backgroundImage = `url('assets/game_${points}_point.png')`; // Disabled dynamic image
             this.showScreen('screen-game1-reward');
         }
     },
@@ -145,6 +154,18 @@ const app = {
         this.currentGameId = null;
         // Hide ticks
         document.querySelectorAll('.tick-mark').forEach(el => el.style.display = 'none');
+
+        // Reset Game Scores
+        if (typeof game1 !== 'undefined') {
+            game1.score = 0;
+            game1.totalScore = 0;
+        }
+        if (typeof game2 !== 'undefined') {
+            game2.score = 0;
+        }
+        if (typeof game3 !== 'undefined') {
+            game3.score = 0;
+        }
     },
 
     updateMenuTicks: function () {

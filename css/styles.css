@@ -122,9 +122,9 @@ body {
 .drop-zone {
     width: 150px;
     height: 150px;
-    border: 2px dashed #ffffff;
+    border: 2px dashed #ffffff00;
     border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.0);
     display: flex;
     justify-content: center;
     align-items: center;
