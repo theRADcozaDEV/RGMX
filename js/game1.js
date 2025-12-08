@@ -34,16 +34,16 @@ const game1 = {
 
         if (stage === 1) {
             zonesHtml = `
-                <div class="drop-zone" data-id="1">1</div>
-                <div class="drop-zone" data-id="2">2</div>
-                <div class="drop-zone" data-id="3">3</div>
-                <div class="drop-zone" data-id="4">4</div>
+                <div class="drop-zone" data-id="1"></div>
+                <div class="drop-zone" data-id="2"></div>
+                <div class="drop-zone" data-id="3"></div>
+                <div class="drop-zone" data-id="4"></div>
             `;
         } else {
             zonesHtml = `
-                <div class="drop-zone" data-id="1">1</div>
-                <div class="drop-zone" data-id="2">2</div>
-                <div class="drop-zone" data-id="3">3</div>
+                <div class="drop-zone" data-id="1"></div>
+                <div class="drop-zone" data-id="2"></div>
+                <div class="drop-zone" data-id="3"></div>
             `;
             // Tighter spacing for Stage 2
             zonesClass = 'd-flex justify-content-center w-100 position-absolute';
