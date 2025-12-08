@@ -69,9 +69,13 @@ const game3 = {
     },
 
     generateGridItems: function (stage) {
-        // Generate 6 items, some correct, some wrong.
-        // For prototype, let's say items 1, 3, 5 are correct.
-        this.correctItems = ['1', '3', '5'];
+        // Generate 6 items
+        if (stage === 1) {
+            this.correctItems = ['2', '3', '4', '5'];
+        } else {
+            this.correctItems = ['1', '5', '6'];
+        }
+        
         let html = '';
         for (let i = 1; i <= 6; i++) {
             html += `<div class="grid-item" data-id="${i}"></div>`;
@@ -92,15 +96,14 @@ const game3 = {
             feedback.innerText = '✓';
             feedback.style.color = '#00ff00';
             feedback.style.textShadow = '0 0 10px #000';
-            this.score++;
+            this.score += 20;
+            console.log(`Game 3: Correct! Score: ${this.score}`);
 
             // Check if all correct items found
-            // For this logic, we need to know how many correct items there are total.
-            // In generateGridItems we set 3 correct items.
             const currentContainer = this.stage === 1 ? document.getElementById('game3-container') : document.getElementById('game3-stage2-container');
             const found = currentContainer.querySelectorAll('.grid-item.correct').length;
 
-            if (found >= 3) {
+            if (found >= this.correctItems.length) {
                 if (this.stage === 1) {
                     setTimeout(() => this.setupStage(2), 500);
                 } else {
@@ -112,8 +115,8 @@ const game3 = {
             feedback.innerText = '✗';
             feedback.style.color = '#ff0000';
             feedback.style.textShadow = '0 0 10px #000';
-            // Penalty? Time reduction? Or just visual feedback.
-            // Let's just show wrong.
+            this.score -= 10;
+            console.log(`Game 3: Wrong! Score: ${this.score}`);
         }
     },
 
@@ -122,7 +125,7 @@ const game3 = {
         this.isPlaying = false;
         if (this.timerInstance) this.timerInstance.stop();
         if (win) {
-            app.showReward(40);
+            app.showReward(this.score);
         } else if (isTimeout) {
             app.showScreen('screen-8');
         } else {
