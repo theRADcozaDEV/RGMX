@@ -25,17 +25,17 @@ const game2 = {
 
                 <!-- Column 2: Drop Zones (66%) -->
                 <div class="d-flex flex-wrap align-content-start" style="width: 67%; padding-top: 65%; padding-right: 30px;">
-                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="1" style="width: 50%; height: 460px; border: 1px solid rgba(255,255,255,0.1);">
-                        <div class="drop-zone" data-id="1">Zone 1</div>
+                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="1" style="width: 50%; height: 460px; border: 1px solid rgba(255,255,255,0.0);">
+                        <div class="drop-zone" data-id="1"></div>
                     </div>
-                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="2" style="width: 50%; height: 460px; border: 1px solid rgba(255,255,255,0.1);">
-                        <div class="drop-zone" data-id="2">Zone 2</div>
+                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="2" style="width: 50%; height: 460px; border: 1px solid rgba(255,255,255,0.0);">
+                        <div class="drop-zone" data-id="2"></div>
                     </div>
-                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="3" style="width: 50%; height: 460px; border: 1px solid rgba(255,255,255,0.1);">
-                        <div class="drop-zone" data-id="3">Zone 3</div>
+                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="3" style="width: 50%; height: 460px; border: 1px solid rgba(255,255,255,0.0);">
+                        <div class="drop-zone" data-id="3"></div>
                     </div>
-                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="4" style="width: 50%; height: 460px; border: 1px solid rgba(255,255,255,0.1);">
-                        <div class="drop-zone" data-id="4">Zone 4</div>
+                    <div class="drop-zone-quadrant d-flex justify-content-center align-items-center" data-id="4" style="width: 50%; height: 460px; border: 1px solid rgba(255,255,255,0.0);">
+                        <div class="drop-zone" data-id="4"></div>
                     </div>
                 </div>
             </div>
