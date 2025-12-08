@@ -13,8 +13,15 @@ const app = {
     playedGames: { 1: false, 2: false, 3: false },
     currentGameId: null,
 
+    // Configuration
+    config: {
+        location_id: 'UNKNOWN',
+        api_url: 'server/upload.php'
+    },
+
     init: function () {
         console.log('App initialized');
+        this.loadConfig(); // Load Config
         this.resetIdleTimer();
         document.addEventListener('click', () => this.resetIdleTimer());
         document.addEventListener('touchstart', () => this.resetIdleTimer());
@@ -241,14 +248,21 @@ const app = {
         
         console.log(`Submitted: Name=${name}, Dept=${dept}, Score=${score}`);
 
-        // Save to Leaderboard
-        const leaderboard = this.getLeaderboard();
-        leaderboard.push({ 
+        const entry = {
+            id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+            location: this.config.location_id,
             name, 
             dept, 
             score, 
             date: new Date().toISOString() 
-        });
+        };
+
+        // 1. Queue for Upload
+        this.addToUploadQueue(entry);
+
+        // 2. Save to Leaderboard (Local Display)
+        const leaderboard = this.getLeaderboard();
+        leaderboard.push(entry); // We save the full entry locally too
         
         // Sort Descending
         leaderboard.sort((a, b) => b.score - a.score);
@@ -262,6 +276,9 @@ const app = {
 
         // Go to Leaderboard
         this.showScreen('screen-leaderboard');
+
+        // Attempt Upload
+        this.processUploadQueue();
     },
 
     getLeaderboard: function () {
@@ -269,6 +286,63 @@ const app = {
         if (stored) return JSON.parse(stored);
         // Default Empty Data
         return [];
+    },
+
+    // --- Config & Sync Logic ---
+    loadConfig: function() {
+        fetch('config.json')
+            .then(res => res.json())
+            .then(data => {
+                this.config = Object.assign({}, this.config, data);
+                console.log('Config loaded:', this.config);
+                // Try upload on boot
+                this.processUploadQueue();
+            })
+            .catch(err => console.log('Using default config (DEV)'));
+    },
+
+    getUploadQueue: function() {
+        try {
+            return JSON.parse(localStorage.getItem('rgmx_upload_queue')) || [];
+        } catch (e) { return []; }
+    },
+
+    addToUploadQueue: function(entry) {
+        const queue = this.getUploadQueue();
+        queue.push(entry);
+        localStorage.setItem('rgmx_upload_queue', JSON.stringify(queue));
+    },
+
+    processUploadQueue: function() {
+        const queue = this.getUploadQueue();
+        if (queue.length === 0) return;
+
+        console.log(`Syncing ${queue.length} scores to ${this.config.api_url}...`);
+
+        fetch(this.config.api_url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ scores: queue })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Sync success.');
+                // In a real robust system, we would remove ONLY the IDs confirmed by server.
+                // For simplicity here, if success=true, we assume all sent were received.
+                // Better: server returns list of received IDs.
+                
+                // If server returns 'received_ids', filter queue.
+                if (data.received_ids && Array.isArray(data.received_ids)) {
+                    const newQueue = queue.filter(item => !data.received_ids.includes(item.id));
+                    localStorage.setItem('rgmx_upload_queue', JSON.stringify(newQueue));
+                } else {
+                    // Fallback: Clear all if simple success
+                    localStorage.setItem('rgmx_upload_queue', '[]');
+                }
+            }
+        })
+        .catch(err => console.log('Sync failed (Offline or Server Error)'));
     },
 
     updateDepartmentSuggestions: function () {
