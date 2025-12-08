@@ -15,8 +15,8 @@ const app = {
 
     // Configuration
     config: {
-        location_id: 'UNKNOWN',
-        api_url: 'server/upload.php'
+        location_id: 'dev',
+        api_url: 'https://vps1.therad.co.za/rgmx/upload.php'
     },
 
     init: function () {
@@ -290,15 +290,15 @@ const app = {
 
     // --- Config & Sync Logic ---
     loadConfig: function() {
-        fetch('config.json')
-            .then(res => res.json())
-            .then(data => {
-                this.config = Object.assign({}, this.config, data);
-                console.log('Config loaded:', this.config);
-                // Try upload on boot
-                this.processUploadQueue();
-            })
-            .catch(err => console.log('Using default config (DEV)'));
+        // Load from global variable defined in js/config.js
+        if (typeof window.RGMX_CONFIG !== 'undefined') {
+            this.config = Object.assign({}, this.config, window.RGMX_CONFIG);
+            console.log('Config loaded from JS:', this.config);
+        } else {
+            console.log('No external config (JS) found, using defaults.');
+        }
+        // Try upload on boot
+        this.processUploadQueue();
     },
 
     getUploadQueue: function() {
