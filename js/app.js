@@ -20,6 +20,9 @@ const app = {
 
         // Initial LED Color (Idle)
         this.setLedColor(255, 255, 255);
+
+        // DEBUG: Start on Next Screen
+        this.showScreen('screen-next');
     },
 
     showScreen: function (screenId) {
