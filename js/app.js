@@ -1,7 +1,7 @@
 const app = {
     currentScreen: 'screen-1',
     idleTimer: null,
-    idleTimeout: 300000, // 5 minutes
+    idleTimeout: 30000, // 30 seconds
     attractTimer: null,
     inAttractLoop: false,
     leaderboardConfetti: null,
@@ -243,7 +243,12 @@ const app = {
 
         // Save to Leaderboard
         const leaderboard = this.getLeaderboard();
-        leaderboard.push({ name, dept, score });
+        leaderboard.push({ 
+            name, 
+            dept, 
+            score, 
+            date: new Date().toISOString() 
+        });
         
         // Sort Descending
         leaderboard.sort((a, b) => b.score - a.score);
