@@ -20,9 +20,6 @@ const app = {
 
         // Initial LED Color (Idle)
         this.setLedColor(255, 255, 255);
-
-        // DEBUG: Start on Next Screen
-        this.showScreen('screen-next');
     },
 
     showScreen: function (screenId) {
@@ -62,6 +59,21 @@ const app = {
             } else if (screenId === 'screen-game1-reward') {
                 this.setLedColor(0, 255, 0); // Win Green
                 if (typeof confettiEffect !== 'undefined') confettiEffect.start();
+            } else if (screenId === 'screen-next') {
+                const title = document.getElementById('next-title');
+                const subtitle = document.getElementById('next-subtitle');
+                if (title && subtitle) {
+                    if (this.currentGameId === 1) {
+                        title.innerHTML = 'Get ready to play <span class="fw-bold">GAME TWO</span>';
+                        subtitle.innerText = 'MATCH PACK WITH THE KPI';
+                    } else if (this.currentGameId === 2) {
+                        title.innerHTML = 'Get ready to play <span class="fw-bold">GAME THREE</span>';
+                        subtitle.innerText = 'KNOW YOUR SKUs';
+                    } else {
+                        title.innerHTML = 'Get ready for <span class="fw-bold">LEADERBOARD</span>';
+                        subtitle.innerText = 'JOIN THE RANKS';
+                    }
+                }
             }
 
             // Reset inputs if showing input screen
