@@ -1,7 +1,11 @@
 const app = {
     currentScreen: 'screen-1',
     idleTimer: null,
-    idleTimeout: 300000, // 60 seconds to reset to home
+    idleTimeout: 300000, // 5 minutes
+    attractTimer: null,
+    inAttractLoop: false,
+    leaderboardConfetti: null,
+    leaderboardConfettiInterval: null,
 
     keyboard: null,
 
@@ -18,6 +22,12 @@ const app = {
         // Initialize Keyboard
         this.keyboard = new VirtualKeyboard('keyboard-container', ['input-name', 'input-dept']);
 
+        // Initialize Leaderboard Confetti
+        const canvas = document.getElementById('leaderboard-canvas');
+        if (canvas && typeof confetti !== 'undefined') {
+            this.leaderboardConfetti = confetti.create(canvas, { resize: true, useWorker: true });
+        }
+
         // Initial LED Color (Idle)
         this.setLedColor(255, 255, 255);
     },
@@ -25,6 +35,8 @@ const app = {
     showScreen: function (screenId) {
         // Stop any confetti if running
         if (typeof confettiEffect !== 'undefined') confettiEffect.stop();
+        // Stop leaderboard confetti (always stop previous)
+        this.stopLeaderboardConfetti();
 
         // Hide current
         const current = document.getElementById(this.currentScreen);
@@ -44,6 +56,7 @@ const app = {
                 this.setLedColor(255, 255, 255); // Idle White
                 // Reset game progress on Home
                 this.resetProgress();
+                this.startAttractTimer();
             } else if (screenId === 'screen-2') {
                 this.updateMenuTicks();
             } else if (screenId === 'screen-7') {
@@ -107,6 +120,8 @@ const app = {
                 }, 100);
             } else if (screenId === 'screen-leaderboard') {
                 this.updateLeaderboardUI(this.getLeaderboard());
+                if (this.inAttractLoop) this.startAttractTimer();
+                if (this.leaderboardConfetti) this.startLeaderboardConfetti();
             }
         } else {
             console.error(`Screen ${screenId} not found`);
@@ -294,20 +309,72 @@ const app = {
         container.innerHTML = html;
     },
 
+    startLeaderboardConfetti: function () {
+        if (this.leaderboardConfettiInterval) return;
+
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+        const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+        this.leaderboardConfettiInterval = setInterval(() => {
+            const particleCount = 50;
+            
+            // since particles fall down, start a bit higher than random
+            this.leaderboardConfetti(Object.assign({}, defaults, { 
+                particleCount, 
+                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
+            }));
+            this.leaderboardConfetti(Object.assign({}, defaults, { 
+                particleCount, 
+                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
+            }));
+        }, 250);
+    },
+
+    stopLeaderboardConfetti: function () {
+        if (this.leaderboardConfettiInterval) {
+            clearInterval(this.leaderboardConfettiInterval);
+            this.leaderboardConfettiInterval = null;
+        }
+        if (this.leaderboardConfetti) {
+            this.leaderboardConfetti.reset();
+        }
+    },
+
     setLedColor: function (r, g, b) {
         // Call local Python server
         fetch(`http://localhost:8000/set_color?r=${r}&g=${g}&b=${b}`)
             .catch(err => console.error('LED Error:', err));
     },
 
+    startAttractTimer: function () {
+        if (this.attractTimer) clearTimeout(this.attractTimer);
+        // 20 seconds loop
+        this.attractTimer = setTimeout(() => {
+            if (this.currentScreen === 'screen-1') {
+                this.inAttractLoop = true;
+                this.showScreen('screen-leaderboard');
+            } else if (this.currentScreen === 'screen-leaderboard' && this.inAttractLoop) {
+                this.showScreen('screen-1');
+            }
+        }, 20000);
+    },
+
     resetIdleTimer: function () {
         if (this.idleTimer) clearTimeout(this.idleTimer);
+        if (this.attractTimer) clearTimeout(this.attractTimer);
+        
+        // If user interacts, we break the loop
+        this.inAttractLoop = false;
+
         // Only set idle timer if not on home screen
         if (this.currentScreen !== 'screen-1') {
             this.idleTimer = setTimeout(() => {
                 console.log('Idle timeout - resetting to home');
                 this.showScreen('screen-1');
             }, this.idleTimeout);
+        } else {
+            // On Home Screen, restart attract timer
+            this.startAttractTimer();
         }
     }
 };

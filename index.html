@@ -139,7 +139,10 @@
 
         <!-- Leaderboard Screen -->
         <div id="screen-leaderboard" class="screen" style="background-image: url('assets/dark_backgroup.jpg'); background-size: cover; background-position: center;" onclick="app.showScreen('screen-1')">
-            <div class="container h-100 d-flex flex-column justify-content-center align-items-center">
+            <!-- Confetti Canvas -->
+            <canvas id="leaderboard-canvas" class="position-absolute w-100 h-100" style="top: 0; left: 0; z-index: 1; pointer-events: none;"></canvas>
+
+            <div class="container h-100 d-flex flex-column justify-content-center align-items-center position-relative" style="z-index: 2;">
                 <h1 class="text-white fw-bold mb-5" style="font-size: 54px; text-shadow: 2px 2px 4px #000;">LEADERBOARD</h1>
                 
                 <div class="w-75">
