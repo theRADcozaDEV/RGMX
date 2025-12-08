@@ -110,6 +110,9 @@ const app = {
                 const scoreDisplay = document.getElementById('total-score-value');
                 if (scoreDisplay) scoreDisplay.innerText = totalPoints;
 
+                // Populate Departments
+                this.updateDepartmentSuggestions();
+
                 document.getElementById('input-name').value = '';
                 document.getElementById('input-dept').value = '';
                 // Focus first input
@@ -245,12 +248,12 @@ const app = {
         // Sort Descending
         leaderboard.sort((a, b) => b.score - a.score);
         
-        // Keep top 10 (though we only show 5)
-        const top10 = leaderboard.slice(0, 10);
-        localStorage.setItem('rgmx_leaderboard', JSON.stringify(top10));
+        // Keep top 50 (storage)
+        const top50 = leaderboard.slice(0, 50);
+        localStorage.setItem('rgmx_leaderboard', JSON.stringify(top50));
 
-        // Update UI
-        this.updateLeaderboardUI(top10);
+        // Update UI (pass all, UI will limit to 20)
+        this.updateLeaderboardUI(top50);
 
         // Go to Leaderboard
         this.showScreen('screen-leaderboard');
@@ -263,29 +266,52 @@ const app = {
         return [];
     },
 
+    updateDepartmentSuggestions: function () {
+        const leaderboard = this.getLeaderboard();
+        // Extract unique departments
+        const depts = [...new Set(leaderboard.map(entry => entry.dept).filter(d => d && d !== 'General'))].sort();
+        
+        const container = document.getElementById('dept-suggestions');
+        if (container) {
+            container.innerHTML = ''; // Clear
+            depts.forEach(d => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-outline-light btn-sm m-1';
+                btn.innerText = d;
+                btn.onclick = () => {
+                    document.getElementById('input-dept').value = d;
+                };
+                container.appendChild(btn);
+            });
+            console.log(`Populated ${depts.length} department suggestions`);
+        } else {
+            console.error('Container #dept-suggestions not found');
+        }
+    },
+
     updateLeaderboardUI: function (data) {
-        // We assume the HTML structure has a container we can empty and rebuild, 
-        // OR we target specific rows. The HTML has hardcoded rows.
-        // It's better to clear and rebuild the list to handle dynamic counts.
-        
         // Find the container. in HTML it is: <div class="w-75"> ... rows ... </div>
-        // I need to add an ID to that container in HTML first to target it easily.
-        // Or I can target .screen-leaderboard .w-75
-        
-        // Let's modify index.html to add an ID to the leaderboard list container first.
-        // But I can try to do it via selector if unique.
         const container = document.querySelector('#screen-leaderboard .w-75');
         if (!container) return;
 
+        // Enable scrolling
+        container.style.maxHeight = '60vh';
+        container.style.overflowY = 'auto';
+        // Hide scrollbar but allow scrolling
+        container.style.scrollbarWidth = 'none'; // Firefox
+        container.style.msOverflowStyle = 'none';  // IE 10+
+        
         let html = '';
         
-        data.slice(0, 5).forEach((entry, index) => {
+        // Show Top 20
+        data.slice(0, 20).forEach((entry, index) => {
             const rank = index + 1;
             let suffix = 'th';
             if (rank === 1) suffix = 'st';
-            if (rank === 2) suffix = 'nd';
-            if (rank === 3) suffix = 'rd';
-
+            if (rank === 2 && rank !== 12) suffix = 'nd';
+            if (rank === 3 && rank !== 13) suffix = 'rd';
+            // Simple suffix logic for < 20. For 21st it would be st, but we stop at 20.
+            
             const isTop3 = rank <= 3;
             const bgClass = 'bg-danger'; // All red background
             const padding = isTop3 ? 'p-3' : 'p-2';
@@ -296,7 +322,7 @@ const app = {
             html += `
             <div class="leaderboard-row d-flex align-items-center ${bgClass} text-white ${padding} mb-2 rounded ${border}" style="font-size: ${fontSize}; ${boxShadow}">
                 <div style="width: 15%; font-weight: bold; color: white;">${rank}${suffix}</div>
-                <div style="width: 60%; font-weight: ${isTop3 ? 'bold' : 'normal'};">${entry.name}</div>
+                <div style="width: 60%; font-weight: ${isTop3 ? 'bold' : 'normal'}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${entry.name}</div>
                 <div style="width: 25%; text-align: right; font-weight: bold;">${entry.score}</div>
             </div>
             `;
