@@ -62,6 +62,42 @@ Now, whenever the PC logs in, the server window will pop up and run. The script 
 - **Game 3**: Tap the correct blocks in a 2x3 grid. Finding all correct blocks advances the stage.
 - **Input Form**: Appears after any game ends (Win or Lose). Allows user to enter Name and Department using an on-screen keyboard.
 
+## Server Upload & Configuration
+The app supports background uploading of game scores to a PHP/MySQL server.
+
+### 1. Configuration (`config.json`)
+You must create a `config.json` file in the root folder to define the environment settings. This file is **ignored by Git** to allow different settings for Dev and Live environments.
+
+**Example `config.json`:**
+```json
+{
+    "location_id": "Store_NYC_01",
+    "api_url": "https://your-domain.com/upload.php"
+}
+```
+*   `location_id`: Identifier for the physical machine/kiosk.
+*   `api_url`: Full URL to the `upload.php` script.
+
+To prevent Git from tracking changes to this file on the live server:
+```bash
+git update-index --skip-worktree config.json
+```
+
+### 2. Backend Setup
+Files are provided in the `server/` directory:
+*   `server/upload.php`: Handles JSON payloads, prevents duplicates, and saves to MySQL.
+*   `server/schema.sql`: MySQL table creation script.
+
+**Deployment:**
+1.  Create a MySQL database and run `schema.sql`.
+2.  Upload `upload.php` to your web server.
+3.  Edit `upload.php` with your database credentials (`$host`, `$db`, `$user`, `$pass`).
+
+### 3. Sync Logic
+*   **Queue System**: If the device is offline, scores are saved to `localStorage` ("Upload Queue").
+*   **Auto-Retry**: The app attempts to upload the queue on startup and after every game submission.
+*   **Deduplication**: Each score has a unique UUID. The server rejects duplicates, preventing double-counting.
+
 ## Customization
 - **Game Logic**: Edit `js/gameX.js` to change scoring, timing, or mechanics.
 - **Visuals**: Replace images in `assets/` or update `css/styles.css`.

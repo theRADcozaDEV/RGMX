@@ -376,6 +376,7 @@ const app = {
         // Enable scrolling
         container.style.maxHeight = '60vh';
         container.style.overflowY = 'auto';
+        container.style.touchAction = 'pan-y'; // Allow vertical scroll
         // Hide scrollbar but allow scrolling
         container.style.scrollbarWidth = 'none'; // Firefox
         container.style.msOverflowStyle = 'none';  // IE 10+

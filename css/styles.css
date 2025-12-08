@@ -15,6 +15,7 @@ body {
     overflow: hidden;
     font-family: 'Inter', sans-serif;
     /* Placeholder font */
+    touch-action: none; /* Prevent pinch zoom and default gestures */
 }
 
 #game-container {
