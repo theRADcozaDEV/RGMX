@@ -282,14 +282,16 @@ const game1 = {
         }
     },
 
-    endGame: function (win) {
+    endGame: function (win, isTimeout = false) {
         this.isPlaying = false;
         if (this.timerInstance) this.timerInstance.stop();
         if (win) {
             // Show 10 Points Reward Screen
             app.showReward(10);
-        } else {
+        } else if (isTimeout) {
             app.showScreen('screen-8');
+        } else {
+            app.showScreen('screen-next');
         }
     }
 };

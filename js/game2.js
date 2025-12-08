@@ -45,7 +45,7 @@ const game2 = {
 
         // Timer
         if (this.timerInstance) this.timerInstance.stop();
-        this.timerInstance = new CountdownTimer('g2-timer-container', 300, () => this.endGame(false));
+        this.timerInstance = new CountdownTimer('g2-timer-container', 300, () => this.endGame(false, true));
         this.timerInstance.start();
     },
 

@@ -104,7 +104,7 @@ const game3 = {
                 if (this.stage === 1) {
                     setTimeout(() => this.setupStage(2), 500);
                 } else {
-                    setTimeout(() => this.endGame(true), 500);
+                    setTimeout(() => this.endGame(true, false), 500);
                 }
             }
         } else {
@@ -117,13 +117,15 @@ const game3 = {
         }
     },
 
-    endGame: function (win) {
+    endGame: function (win, isTimeout = false) {
         this.isPlaying = false;
         if (this.timerInstance) this.timerInstance.stop();
         if (win) {
             app.showReward(40);
-        } else {
+        } else if (isTimeout) {
             app.showScreen('screen-8');
+        } else {
+            app.showScreen('screen-next');
         }
     }
 };
