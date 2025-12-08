@@ -105,6 +105,8 @@ const app = {
                     // Ensure keyboard is shown
                     if (this.keyboard) this.keyboard.show();
                 }, 100);
+            } else if (screenId === 'screen-leaderboard') {
+                this.updateLeaderboardUI(this.getLeaderboard());
             }
         } else {
             console.error(`Screen ${screenId} not found`);
@@ -198,14 +200,81 @@ const app = {
     },
 
     submitInput: function () {
-        const name = document.getElementById('input-name').value;
-        const dept = document.getElementById('input-dept').value;
-        console.log(`Submitted: Name=${name}, Dept=${dept}`);
+        const name = document.getElementById('input-name').value.trim() || 'Player';
+        const dept = document.getElementById('input-dept').value.trim() || 'General';
+        const score = parseInt(document.getElementById('total-score-value').innerText) || 0;
+        
+        console.log(`Submitted: Name=${name}, Dept=${dept}, Score=${score}`);
 
-        // Here you would save the data
+        // Save to Leaderboard
+        const leaderboard = this.getLeaderboard();
+        leaderboard.push({ name, dept, score });
+        
+        // Sort Descending
+        leaderboard.sort((a, b) => b.score - a.score);
+        
+        // Keep top 10 (though we only show 5)
+        const top10 = leaderboard.slice(0, 10);
+        localStorage.setItem('rgmx_leaderboard', JSON.stringify(top10));
+
+        // Update UI
+        this.updateLeaderboardUI(top10);
 
         // Go to Leaderboard
         this.showScreen('screen-leaderboard');
+    },
+
+    getLeaderboard: function () {
+        const stored = localStorage.getItem('rgmx_leaderboard');
+        if (stored) return JSON.parse(stored);
+        // Default Empty Data
+        return [];
+    },
+
+    updateLeaderboardUI: function (data) {
+        // We assume the HTML structure has a container we can empty and rebuild, 
+        // OR we target specific rows. The HTML has hardcoded rows.
+        // It's better to clear and rebuild the list to handle dynamic counts.
+        
+        // Find the container. in HTML it is: <div class="w-75"> ... rows ... </div>
+        // I need to add an ID to that container in HTML first to target it easily.
+        // Or I can target .screen-leaderboard .w-75
+        
+        // Let's modify index.html to add an ID to the leaderboard list container first.
+        // But I can try to do it via selector if unique.
+        const container = document.querySelector('#screen-leaderboard .w-75');
+        if (!container) return;
+
+        let html = '';
+        
+        data.slice(0, 5).forEach((entry, index) => {
+            const rank = index + 1;
+            let suffix = 'th';
+            if (rank === 1) suffix = 'st';
+            if (rank === 2) suffix = 'nd';
+            if (rank === 3) suffix = 'rd';
+
+            const isTop3 = rank <= 3;
+            const bgClass = 'bg-danger'; // All red background
+            const padding = isTop3 ? 'p-3' : 'p-2';
+            const fontSize = isTop3 ? '26px' : '20px';
+            const boxShadow = isTop3 ? 'box-shadow: 0 0 15px rgba(255,0,0,0.5);' : 'opacity: 0.9;';
+            const border = 'border border-white';
+            
+            html += `
+            <div class="leaderboard-row d-flex align-items-center ${bgClass} text-white ${padding} mb-2 rounded ${border}" style="font-size: ${fontSize}; ${boxShadow}">
+                <div style="width: 15%; font-weight: bold; color: white;">${rank}${suffix}</div>
+                <div style="width: 60%; font-weight: ${isTop3 ? 'bold' : 'normal'};">${entry.name}</div>
+                <div style="width: 25%; text-align: right; font-weight: bold;">${entry.score}</div>
+            </div>
+            `;
+            
+            if (rank === 3 && data.length > 3) {
+                html += `<hr class="border border-white border-3 opacity-100 my-3">`;
+            }
+        });
+
+        container.innerHTML = html;
     },
 
     setLedColor: function (r, g, b) {
